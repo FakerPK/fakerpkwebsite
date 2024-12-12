@@ -50,7 +50,7 @@ export default function Home() {
     controlsRef.current = controls;
 
     const loader = new GLTFLoader();
-    loader.load('/path/to/your/model.gltf', (gltf) => {
+    loader.load('fakerpkwebsite/models/ps5-controller.gltf', (gltf) => {
       scene.add(gltf.scene);
       setModelLoaded(true);
     }, undefined, (error) => {
