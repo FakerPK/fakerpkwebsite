@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import * as THREE from 'three';
 import { useRef, useState, useEffect } from "react";

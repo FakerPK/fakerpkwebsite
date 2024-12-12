@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 const fightingSpirit = {
   variable: "--font-fighting-spirit",
-  url: "https://fonts.googleapis.com/css2?family=Fighting+Spirit&display=swap",
+  url: "https://fonts.cdnfonts.com/css/fighting-spirit",
 };
 
 export const metadata: Metadata = {
