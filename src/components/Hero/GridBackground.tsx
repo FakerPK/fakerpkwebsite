@@ -1,8 +1,22 @@
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import { useEffect } from 'react';
 
 export const GridBackground = () => {
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start({
+      opacity: [0, 1],
+      transition: { duration: 1 }
+    });
+  }, [controls]);
+
   return (
-    <div className="grid-background absolute inset-0">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={controls}
+      className="grid-background absolute inset-0"
+    >
       {Array.from({ length: 400 }).map((_, i) => (
         <div
           key={i}
@@ -15,6 +29,6 @@ export const GridBackground = () => {
           }}
         />
       ))}
-    </div>
+    </motion.div>
   );
 };

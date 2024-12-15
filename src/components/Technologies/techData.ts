@@ -1,7 +1,7 @@
 import {
-  Javascript,
+  Code2 as Javascript,
+  FileCode as Python,
   Github,
-  Python,
   GitBranch,
   Boxes,
   Server
