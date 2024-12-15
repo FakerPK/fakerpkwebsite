@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.grid-background {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 120, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 120, 0, 0.1) 1px, transparent 1px);
+}
+
+.grid-line {
+  @apply bg-orange-500/0 transition-colors duration-300;
+}
+
+.grid-line:hover {
+  @apply bg-orange-500;
+  box-shadow: 0 0 15px theme('colors.orange.500');
+}
+
+.navbar {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 120, 0, 0.2);
+  border-radius: 9999px;
+  box-shadow: 
+    0 0 20px rgba(255, 120, 0, 0.1),
+    inset 0 0 20px rgba(255, 120, 0, 0.1);
+}
+
+.tech-button {
+  @apply rounded-xl bg-gray-800 p-6 transition-all duration-300;
+  border: 1px solid rgba(255, 120, 0, 0.2);
+  box-shadow: 0 0 20px rgba(255, 120, 0, 0.1);
+}
+
+.tech-button:hover {
+  border-color: theme('colors.orange.500');
+  box-shadow: 0 0 30px rgba(255, 120, 0, 0.2);
+  transform: translateY(-5px);
+}
