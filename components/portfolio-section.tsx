@@ -6,22 +6,22 @@ import { Button } from "@/components/ui/button"
 
 const projects = [
   {
-    title: "E-Commerce Platform",
+    title: "GetGrass.io Websocket Automation",
     description:
-      "Full-stack e-commerce solution with React, Node.js, and MongoDB. Features include user authentication, payment processing, and admin dashboard.",
-    image: "/modern-ecommerce-website.png",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-    liveUrl: "#",
-    githubUrl: "#",
+      "Python And Javascript based script to interact with the Grass.io Websocket with multiple connections with the use of proxies.",
+    image: "/grass.png",
+    technologies: ["Python", "Node.js", "Websockets", "Git"],
+    liveUrl: "https://medium.com/@FakerPK/farm-the-getgrass-io-airdrop-with-this-farming-bot-community-node-1-25x-multiple-accounts-b032a952f9a6",
+    githubUrl: "https://github.com/FakerPK/NewGrassBot",
   },
   {
-    title: "AI Chat Application",
+    title: "Bless Network Node Management and Points Mining Automation Script",
     description:
-      "Real-time chat application with AI integration. Built with Next.js, Socket.io, and OpenAI API for intelligent conversations.",
-    image: "/ai-chat-interface.png",
-    technologies: ["Next.js", "Socket.io", "OpenAI", "Tailwind"],
-    liveUrl: "#",
-    githubUrl: "#",
+      "Python, PHP and Javascript based Scripts to interact with the Bless Network Websocket and establish multiple connections for the same account using proxies.",
+    image: "/bless.png",
+    technologies: ["Node.js", "Python", "PHP", "Git", "Websockets"],
+    liveUrl: "https://medium.com/@FakerPK/bless-network-bot-v1-0-automate-node-management-and-mining-6f017d47bb44",
+    githubUrl: "https://github.com/FakerPK/BlessNetworkBot",
   },
 ]
 
