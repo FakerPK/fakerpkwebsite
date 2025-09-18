@@ -77,8 +77,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -286,4 +286,99 @@
   );
   background-size: 200% 200%;
   animation: backgroundBeams 10s linear infinite;
+}
+
+.contact-popup {
+  position: relative;
+  border-radius: 1rem;
+  background: #0a0a0a;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(255, 102, 0, 0.3);
+  animation: popup-scale 0.25s ease-out;
+  /* Better centering for the popup */
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Neon spinning border */
+.contact-popup::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #ff6600 60deg,
+    #ff9900 120deg,
+    #ffaa00 180deg,
+    #ff6600 240deg,
+    #ff9900 300deg,
+    transparent 360deg
+  );
+  animation: spin 6s linear infinite;
+  filter: blur(15px) brightness(1.4);
+  z-index: -2;
+}
+
+.contact-popup::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 0.9rem;
+  background: #0a0a0a;
+  z-index: -1;
+}
+
+.navbar-gradient {
+  position: relative;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.navbar-gradient::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #ff6600 60deg,
+    #ff9900 120deg,
+    #ffaa00 180deg,
+    #ff6600 240deg,
+    #ff9900 300deg,
+    transparent 360deg
+  );
+  animation: spin 8s linear infinite;
+  filter: blur(8px) brightness(1.2);
+  z-index: -2;
+}
+
+.navbar-gradient::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 9999px;
+  background: var(--background);
+  backdrop-filter: blur(16px);
+  z-index: -1;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes popup-scale {
+  from {
+    /* Fixed scale animation to work with dialog centering */
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

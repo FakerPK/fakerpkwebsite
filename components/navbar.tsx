@@ -90,13 +90,11 @@ export default function Navbar() {
               opacity: 0,
             }))
           }}
-          className={`relative mx-auto flex w-fit rounded-full border-2 backdrop-blur-md p-1.5 shadow-xl transition-all duration-500 hover:scale-110 hover:shadow-2xl ${
+          className={`navbar-gradient relative mx-auto flex w-fit rounded-full border-2 backdrop-blur-md p-1.5 shadow-xl transition-all duration-500 hover:scale-110 hover:shadow-2xl ${
             theme === "light"
-              ? "bg-white/90 border-gray-200 hover:shadow-black/20"
-              : "bg-black/80 border-ring hover:shadow-primary/20"
-          } ${shouldPop ? "scale-110 shadow-2xl" : ""} ${
-            shouldPop && theme === "light" ? "shadow-black/20" : shouldPop ? "shadow-primary/20" : ""
-          }`}
+              ? "bg-white/90 border-orange-200 hover:shadow-orange-500/20"
+              : "bg-black/80 border-orange-500/30 hover:shadow-orange-500/20"
+          } ${shouldPop ? "scale-110 shadow-2xl" : ""} ${shouldPop ? "shadow-orange-500/20" : ""}`}
         >
           <Tab
             setPosition={setPosition}

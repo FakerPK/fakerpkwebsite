@@ -1,18 +1,22 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { Inter } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "FakerPK's Portfolio",
   description: "FakerPK's Portfolio",
   generator: "v0.app",
   icons: {
-    icon: "/icon.png",        // transparent background PNG
-    shortcut: "/icon.png",    // fallback
-    apple: "/icon.png",       // for iOS devices
+    icon: "/icon.png", // transparent background PNG
+    shortcut: "/icon.png", // fallback
+    apple: "/icon.png", // for iOS devices
   },
   openGraph: {
     title: "FakerPK's Portfolio",
@@ -44,7 +48,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+      <body className={`font-sans ${inter.variable} antialiased`}>
         <Suspense fallback={null}>{children}</Suspense>
       </body>
     </html>

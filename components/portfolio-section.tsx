@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { ExternalLink, Github } from "lucide-react"
+import { Github, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const projects = [
@@ -11,7 +11,8 @@ const projects = [
       "Python And Javascript based script to interact with the Grass.io Websocket with multiple connections with the use of proxies.",
     image: "/grass.png",
     technologies: ["Python", "Node.js", "Websockets", "Git"],
-    liveUrl: "https://medium.com/@FakerPK/farm-the-getgrass-io-airdrop-with-this-farming-bot-community-node-1-25x-multiple-accounts-b032a952f9a6",
+    liveUrl:
+      "https://medium.com/@FakerPK/farm-the-getgrass-io-airdrop-with-this-farming-bot-community-node-1-25x-multiple-accounts-b032a952f9a6",
     githubUrl: "https://github.com/FakerPK/NewGrassBot",
   },
   {
@@ -49,16 +50,42 @@ export default function PortfolioSection() {
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:block">
                   <div className="flex gap-2">
-                    <Button size="sm" className="bg-primary hover:bg-secondary">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Live Demo
+                    <Button
+                      size="sm"
+                      className="bg-primary hover:bg-secondary"
+                      onClick={() => window.open(project.liveUrl, "_blank")}
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Medium Article
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       className="border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent"
+                      onClick={() => window.open(project.githubUrl, "_blank")}
+                    >
+                      <Github className="w-4 h-4 mr-2" />
+                      Code
+                    </Button>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 md:hidden">
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      className="bg-primary hover:bg-secondary"
+                      onClick={() => window.open(project.liveUrl, "_blank")}
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Medium Article
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-black/50"
+                      onClick={() => window.open(project.githubUrl, "_blank")}
                     >
                       <Github className="w-4 h-4 mr-2" />
                       Code
@@ -76,7 +103,7 @@ export default function PortfolioSection() {
                   {project.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs md:text-sm font-medium border border-primary/20"
+                      className="px-3 py-1 bg-primary/20 rounded-full text-xs md:text-sm font-medium border border-primary/30 text-sidebar-primary"
                     >
                       {tech}
                     </span>

@@ -21,7 +21,7 @@ const technologies = [
   },
   {
     name: "Vercel",
-    image: "/vercel-logo.png",
+    image: "/images/vercel-logo.png",
     description: "Deployment & Hosting",
   },
   {
