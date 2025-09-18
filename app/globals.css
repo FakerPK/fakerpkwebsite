@@ -360,9 +360,15 @@
   position: absolute;
   inset: 1px;
   border-radius: 9999px;
-  background: var(--background);
+  /* Fixed background to use proper theme-aware colors instead of CSS variable */
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(16px);
   z-index: -1;
+}
+
+/* Added dark mode specific styling for navbar gradient */
+.dark .navbar-gradient::after {
+  background: rgba(13, 13, 13, 0.9);
 }
 
 @keyframes spin {

@@ -172,8 +172,8 @@ const Tab = ({
             ? "text-black font-semibold"
             : "text-black/70 hover:text-black"
           : isActive
-            ? "text-white font-semibold"
-            : "text-white/80 hover:text-white"
+            ? "text-black font-semibold"
+            : "text-black/80 hover:text-black"
       }`}
     >
       {children}
@@ -197,11 +197,11 @@ const Cursor = ({
         stiffness: 500,
         damping: 30,
       }}
-      className={`absolute z-0 h-9 rounded-full shadow-lg ${theme === "light" ? "bg-black" : "bg-primary"}`}
+      className={`absolute z-0 h-9 rounded-full shadow-lg ${theme === "light" ? "bg-primary" : "bg-primary"}`}
       style={{
         boxShadow:
           theme === "light"
-            ? "0 0 20px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.2)"
+            ? "0 0 20px rgba(255, 106, 0, 0.5), 0 0 40px rgba(255, 106, 0, 0.3)"
             : "0 0 20px rgba(255, 102, 0, 0.5), 0 0 40px rgba(255, 102, 0, 0.3)",
       }}
     />
