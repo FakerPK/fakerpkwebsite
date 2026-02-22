@@ -4,9 +4,12 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Home, Code, Briefcase, Mail } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useTheme } from "next-themes"
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
+  const { resolvedTheme } = useTheme()
+  const isLight = resolvedTheme === "light"
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -24,14 +27,18 @@ export default function MobileNav() {
   ]
 
   return (
-    <div className="md:hidden fixed top-6 right-6 z-50">
+    <div className="fixed top-6 right-6 z-50 md:hidden">
       <Button
         variant="ghost"
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-black/80 backdrop-blur-sm border-2 border-primary/30 hover:bg-black/90 hover:border-primary/50 transition-all duration-300"
+        className={`border-2 backdrop-blur-sm transition-all duration-300 ${
+          isLight
+            ? "border-orange-300 bg-white/90 hover:border-orange-400 hover:bg-white"
+            : "border-primary/30 bg-black/80 hover:border-primary/50 hover:bg-black/90"
+        }`}
         style={{
-          boxShadow: isOpen ? "0 0 20px rgba(255, 102, 0, 0.3)" : "0 0 10px rgba(255, 102, 0, 0.2)",
+          boxShadow: isOpen ? "0 0 20px rgba(255, 102, 0, 0.25)" : "0 0 10px rgba(255, 102, 0, 0.15)",
         }}
       >
         {isOpen ? <X className="h-5 w-5 text-primary" /> : <Menu className="h-5 w-5 text-primary" />}
@@ -44,9 +51,11 @@ export default function MobileNav() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-14 right-0 bg-black/90 backdrop-blur-md border-2 border-primary/30 rounded-lg p-2 min-w-[140px]"
+            className={`absolute top-14 right-0 min-w-[140px] rounded-lg border-2 p-2 backdrop-blur-md ${
+              isLight ? "border-orange-300 bg-white/95" : "border-primary/30 bg-black/90"
+            }`}
             style={{
-              boxShadow: "0 0 30px rgba(255, 102, 0, 0.2), 0 0 60px rgba(255, 102, 0, 0.1)",
+              boxShadow: "0 0 30px rgba(255, 102, 0, 0.18), 0 0 60px rgba(255, 102, 0, 0.08)",
             }}
           >
             {navItems.map((item, index) => {
@@ -62,7 +71,11 @@ export default function MobileNav() {
                     variant="ghost"
                     size="sm"
                     onClick={() => scrollToSection(item.id)}
-                    className="w-full justify-start gap-3 text-left hover:bg-primary/20 hover:text-primary transition-all duration-200 text-white"
+                    className={`w-full justify-start gap-3 text-left transition-all duration-200 ${
+                      isLight
+                        ? "text-zinc-800 hover:bg-orange-100 hover:text-orange-700"
+                        : "text-white hover:bg-primary/20 hover:text-primary"
+                    }`}
                   >
                     <Icon className="h-4 w-4" />
                     {item.label}
