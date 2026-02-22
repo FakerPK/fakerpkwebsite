@@ -14,7 +14,13 @@ export default function Navbar() {
     opacity: 0,
   })
   const [shouldPop, setShouldPop] = useState(false)
-  const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme } = useTheme()
+  const isLight = resolvedTheme === "light"
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,8 +46,8 @@ export default function Navbar() {
   useEffect(() => {
     const interval = setInterval(() => {
       setShouldPop(true)
-      setTimeout(() => setShouldPop(false), 600) // Slower animation duration
-    }, 4000) // Every 4 seconds instead of 2
+      setTimeout(() => setShouldPop(false), 600)
+    }, 4000)
 
     return () => clearInterval(interval)
   }, [])
@@ -53,33 +59,23 @@ export default function Navbar() {
     }
   }
 
+  if (!mounted) return null
+
   return (
-    <nav className="hidden md:block fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+    <nav className="fixed top-6 left-1/2 z-50 hidden -translate-x-1/2 md:block">
       <div className="relative">
         <div className="absolute inset-0 rounded-full animate-spin-slow">
           <div
-            className={`absolute top-0 left-1/2 w-2 h-2 ${theme === "light" ? "bg-black/30" : "bg-primary/30"} rounded-full transform -translate-x-1/2 -translate-y-3 blur-sm`}
+            className={`absolute top-0 left-1/2 h-2 w-2 ${isLight ? "bg-orange-400/40" : "bg-primary/30"} -translate-x-1/2 -translate-y-3 rounded-full blur-sm`}
           ></div>
           <div
-            className={`absolute bottom-0 left-1/2 w-2 h-2 ${theme === "light" ? "bg-black/30" : "bg-primary/30"} rounded-full transform -translate-x-1/2 translate-y-3 blur-sm`}
+            className={`absolute bottom-0 left-1/2 h-2 w-2 ${isLight ? "bg-orange-400/40" : "bg-primary/30"} -translate-x-1/2 translate-y-3 rounded-full blur-sm`}
           ></div>
           <div
-            className={`absolute left-0 top-1/2 w-2 h-2 ${theme === "light" ? "bg-black/30" : "bg-primary/30"} rounded-full transform -translate-x-3 -translate-y-1/2 blur-sm`}
+            className={`absolute top-1/2 left-0 h-2 w-2 ${isLight ? "bg-orange-400/40" : "bg-primary/30"} -translate-x-3 -translate-y-1/2 rounded-full blur-sm`}
           ></div>
           <div
-            className={`absolute right-0 top-1/2 w-2 h-2 ${theme === "light" ? "bg-black/30" : "bg-primary/30"} rounded-full transform translate-x-3 -translate-y-1/2 blur-sm`}
-          ></div>
-          <div
-            className={`absolute top-1/4 right-1/4 w-1.5 h-1.5 ${theme === "light" ? "bg-black/20" : "bg-primary/20"} rounded-full blur-sm`}
-          ></div>
-          <div
-            className={`absolute bottom-1/4 left-1/4 w-1.5 h-1.5 ${theme === "light" ? "bg-black/20" : "bg-primary/20"} rounded-full blur-sm`}
-          ></div>
-          <div
-            className={`absolute top-3/4 right-3/4 w-1.5 h-1.5 ${theme === "light" ? "bg-black/20" : "bg-primary/20"} rounded-full blur-sm`}
-          ></div>
-          <div
-            className={`absolute bottom-3/4 left-3/4 w-1.5 h-1.5 ${theme === "light" ? "bg-black/20" : "bg-primary/20"} rounded-full blur-sm`}
+            className={`absolute top-1/2 right-0 h-2 w-2 ${isLight ? "bg-orange-400/40" : "bg-primary/30"} translate-x-3 -translate-y-1/2 rounded-full blur-sm`}
           ></div>
         </div>
 
@@ -90,25 +86,20 @@ export default function Navbar() {
               opacity: 0,
             }))
           }}
-          className={`navbar-gradient relative mx-auto flex w-fit rounded-full border-2 backdrop-blur-md p-1.5 shadow-xl transition-all duration-500 hover:scale-110 hover:shadow-2xl ${
-            theme === "light"
-              ? "bg-white/90 border-orange-200 hover:shadow-orange-500/20"
-              : "bg-black/80 border-orange-500/30 hover:shadow-orange-500/20"
-          } ${shouldPop ? "scale-110 shadow-2xl" : ""} ${shouldPop ? "shadow-orange-500/20" : ""}`}
+          className={`navbar-gradient relative mx-auto flex w-fit rounded-full border-2 p-1.5 shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-110 hover:shadow-2xl ${
+            isLight
+              ? "border-orange-300/70 bg-white/95 hover:shadow-orange-500/30"
+              : "border-orange-500/30 bg-black/80 hover:shadow-orange-500/20"
+          } ${shouldPop ? "scale-110 shadow-2xl shadow-orange-500/20" : ""}`}
         >
-          <Tab
-            setPosition={setPosition}
-            onClick={() => scrollToSection("home")}
-            isActive={activeSection === "home"}
-            theme={theme}
-          >
+          <Tab setPosition={setPosition} onClick={() => scrollToSection("home")} isActive={activeSection === "home"} isLight={isLight}>
             Home
           </Tab>
           <Tab
             setPosition={setPosition}
             onClick={() => scrollToSection("technologies")}
             isActive={activeSection === "technologies"}
-            theme={theme}
+            isLight={isLight}
           >
             Tech
           </Tab>
@@ -116,7 +107,7 @@ export default function Navbar() {
             setPosition={setPosition}
             onClick={() => scrollToSection("portfolio")}
             isActive={activeSection === "portfolio"}
-            theme={theme}
+            isLight={isLight}
           >
             Work
           </Tab>
@@ -124,12 +115,12 @@ export default function Navbar() {
             setPosition={setPosition}
             onClick={() => scrollToSection("contact")}
             isActive={activeSection === "contact"}
-            theme={theme}
+            isLight={isLight}
           >
             Contact
           </Tab>
 
-          <Cursor position={position} theme={theme} />
+          <Cursor position={position} isLight={isLight} />
         </ul>
       </div>
     </nav>
@@ -141,13 +132,13 @@ const Tab = ({
   setPosition,
   onClick,
   isActive,
-  theme,
+  isLight,
 }: {
   children: React.ReactNode
   setPosition: (position: any) => void
   onClick: () => void
   isActive: boolean
-  theme?: string
+  isLight: boolean
 }) => {
   const ref = useRef<HTMLLIElement>(null)
 
@@ -166,14 +157,14 @@ const Tab = ({
         })
       }}
       onClick={onClick}
-      className={`relative z-10 block cursor-pointer px-4 py-2 text-sm font-medium transition-colors duration-200 rounded-full ${
-        theme === "light"
+      className={`relative z-10 block cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+        isLight
           ? isActive
-            ? "text-black font-semibold"
-            : "text-black/70 hover:text-black"
+            ? "font-semibold text-zinc-900"
+            : "text-zinc-700 hover:text-zinc-900"
           : isActive
-            ? "text-black font-semibold"
-            : "text-black/80 hover:text-black"
+            ? "font-semibold text-white"
+            : "text-zinc-300 hover:text-white"
       }`}
     >
       {children}
@@ -183,8 +174,8 @@ const Tab = ({
 
 const Cursor = ({
   position,
-  theme,
-}: { position: { left: number; width: number; opacity: number }; theme?: string }) => {
+  isLight,
+}: { position: { left: number; width: number; opacity: number }; isLight: boolean }) => {
   return (
     <motion.li
       animate={{
@@ -197,12 +188,11 @@ const Cursor = ({
         stiffness: 500,
         damping: 30,
       }}
-      className={`absolute z-0 h-9 rounded-full shadow-lg ${theme === "light" ? "bg-primary" : "bg-primary"}`}
+      className="absolute z-0 h-9 rounded-full bg-primary shadow-lg"
       style={{
-        boxShadow:
-          theme === "light"
-            ? "0 0 20px rgba(255, 106, 0, 0.5), 0 0 40px rgba(255, 106, 0, 0.3)"
-            : "0 0 20px rgba(255, 102, 0, 0.5), 0 0 40px rgba(255, 102, 0, 0.3)",
+        boxShadow: isLight
+          ? "0 0 20px rgba(255, 106, 0, 0.35), 0 0 40px rgba(255, 106, 0, 0.15)"
+          : "0 0 20px rgba(255, 102, 0, 0.5), 0 0 40px rgba(255, 102, 0, 0.3)",
       }}
     />
   )
