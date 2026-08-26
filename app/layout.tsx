@@ -1,28 +1,43 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import { Suspense } from "react"
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "700"],
+  variable: "--font-display",
+  display: "swap",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
 })
 
 export const metadata: Metadata = {
-  title: "FakerPK's Portfolio",
-  description: "FakerPK's Portfolio",
-  generator: "v0.app",
+  metadataBase: new URL("https://fakerpk.vercel.app"),
+  title: "FakerPK™ — Backend & Automations Developer",
+  description:
+    "Websocket fleets, multi-connection proxy pools, and node management that stays online. Scripts in orbit — systems under control.",
   icons: {
-    icon: "/icon.png", // transparent background PNG
-    shortcut: "/icon.png", // fallback
-    apple: "/icon.png", // for iOS devices
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
   },
   openGraph: {
-    title: "FakerPK's Portfolio",
-    description: "Check out my work & projects 👨‍💻🔥",
+    title: "FakerPK™ — Backend & Automations Developer",
+    description:
+      "Websocket automation, proxy pools, and node management that runs itself. View my work and collaborate.",
     url: "https://fakerpk.vercel.app",
     siteName: "FakerPK",
     images: [
@@ -38,24 +53,21 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FakerPK's Portfolio",
-    description: "Check out my work & projects 👨‍💻🔥",
+    title: "FakerPK™ — Backend & Automations Developer",
+    description: "Websocket automation, proxy pools, and node management that runs itself.",
     images: ["/thumbnail.png"],
   },
 }
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans ${inter.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <Suspense fallback={null}>{children}</Suspense>
-        </ThemeProvider>
-        <Analytics />
-      </body>
+    <html lang="en" className={`dark ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+      <body className="antialiased">{children}</body>
+      <Analytics />
     </html>
   )
 }

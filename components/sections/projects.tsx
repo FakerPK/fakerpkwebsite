@@ -1,0 +1,103 @@
+import Image from "next/image"
+import { ArrowUpRight, FileText, Github } from "lucide-react"
+import { PROJECTS } from "@/lib/content"
+import Eyebrow from "@/components/ui/eyebrow"
+import Reveal from "@/components/ui/reveal"
+
+// Editorial asymmetry: first card wide-left, second narrow-right and offset down.
+const CARD_LAYOUT = [
+  "lg:col-span-7",
+  "lg:col-span-5 lg:col-start-8 lg:mt-28",
+]
+
+export default function ProjectsSection() {
+  return (
+    <section id="work" className="relative py-32 md:py-40">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
+        <Reveal variant="mask">
+          <Eyebrow index="02" label="Selected Work" className="mb-8" />
+        </Reveal>
+
+        <Reveal variant="mask">
+          <h2 className="text-display-md">
+            Two systems.
+            <br />
+            Zero <span className="text-accent">downtime.</span>
+          </h2>
+        </Reveal>
+
+        <div className="mt-16 grid grid-cols-12 gap-6 md:mt-24 lg:gap-8">
+          {PROJECTS.map((project, i) => (
+            <Reveal key={project.title} variant="fade" delayMs={i * 120} className={`col-span-12 ${CARD_LAYOUT[i]}`}>
+              <article
+                data-cursor="hover"
+                className="group overflow-hidden rounded-2xl border border-hairline bg-surface transition-colors duration-300 ease-brand hover:border-white/15"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} — project visual`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 58vw"
+                    className="object-cover transition-transform duration-700 ease-brand group-hover:scale-[1.04]"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-void/70 via-transparent to-transparent opacity-60"
+                  />
+                </div>
+
+                <div className="space-y-5 p-6 md:p-8">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-signage text-ink-muted">P·0{i + 1}</span>
+                    <div className="flex flex-wrap justify-end gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full border border-hairline px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ink-muted"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <h3 className="font-display text-2xl font-bold tracking-tight transition-colors duration-300 ease-brand group-hover:text-accent md:text-3xl">
+                    {project.title}
+                  </h3>
+
+                  <p className="text-sm leading-relaxed text-ink-muted md:text-base">{project.description}</p>
+
+                  <div className="flex flex-wrap gap-x-8 gap-y-3 pt-1">
+                    <a
+                      href={project.articleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} — read the Medium write-up`}
+                      className="text-signage inline-flex items-center gap-2 text-ink underline-offset-8 decoration-white/20 transition-colors duration-200 ease-brand hover:text-accent hover:decoration-accent"
+                    >
+                      <FileText size={15} strokeWidth={1.5} aria-hidden="true" />
+                      Write-up
+                      <ArrowUpRight size={13} strokeWidth={1.5} aria-hidden="true" className="transition-transform duration-300 ease-brand hover:-translate-y-0.5 hover:translate-x-0.5" />
+                    </a>
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} — view source on GitHub`}
+                      className="text-signage inline-flex items-center gap-2 text-ink underline-offset-8 decoration-white/20 transition-colors duration-200 ease-brand hover:text-accent hover:decoration-accent"
+                    >
+                      <Github size={15} strokeWidth={1.5} aria-hidden="true" />
+                      Source
+                      <ArrowUpRight size={13} strokeWidth={1.5} aria-hidden="true" className="transition-transform duration-300 ease-brand hover:-translate-y-0.5 hover:translate-x-0.5" />
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -1,84 +1,57 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
+/* Runtime design tokens — plain CSS vars, consumed by @theme inline below
+   AND directly by base styles/utilities. Dark-only site. */
 :root {
-  /* Light mode colors */
-  --background: #ffffff;
-  --foreground: #1a1a1a;
-  --card: #f8f9fa;
-  --card-foreground: #1a1a1a;
-  --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-  --primary: #ff6a00;
-  --primary-foreground: #ffffff;
-  --secondary: #ff3d00;
-  --secondary-foreground: #ffffff;
-  --muted: #f1f3f4;
-  --muted-foreground: #6b7280;
+  /* Brand voice */
+  --void: #0a0908;
+  --surface: #14100d;
+  --raised: #1c1712;
+  --ink: #edeae6;
+  --ink-muted: rgba(237, 234, 230, 0.62);
   --accent: #ff6a00;
-  --accent-foreground: #ffffff;
+  --accent-soft: rgba(255, 106, 0, 0.12);
+  --hairline: rgba(255, 255, 255, 0.08);
+
+  /* shadcn compatibility layer */
+  --background: #0a0908;
+  --foreground: #edeae6;
+  --card: #14100d;
+  --card-foreground: #edeae6;
+  --popover: #14100d;
+  --popover-foreground: #edeae6;
+  --primary: #ff6a00;
+  --primary-foreground: #0a0908;
+  --secondary: #1c1712;
+  --secondary-foreground: #edeae6;
+  --muted: #1c1712;
+  --muted-foreground: rgba(237, 234, 230, 0.62);
+  --accent-foreground: #0a0908;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #ffffff;
-  --ring: rgba(255, 106, 0, 0.5);
-  --chart-1: #ff6a00;
-  --chart-2: #ff3d00;
-  --chart-3: #1a1a1a;
-  --chart-4: #f8f9fa;
-  --chart-5: #ffffff;
-  --radius: 0.5rem;
-  --sidebar: #f8f9fa;
-  --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #ff6a00;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #ff3d00;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: rgba(255, 106, 0, 0.5);
-}
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #ff6a00;
 
-.dark {
-  /* Dark mode colors */
-  --background: #0d0d0d;
-  --foreground: #eaeaea;
-  --card: #1a1a1a;
-  --card-foreground: #eaeaea;
-  --popover: #1a1a1a;
-  --popover-foreground: #eaeaea;
-  --primary: #ff6a00;
-  --primary-foreground: #0d0d0d;
-  --secondary: #ff3d00;
-  --secondary-foreground: #0d0d0d;
-  --muted: #1a1a1a;
-  --muted-foreground: #888888;
-  --accent: rgb(241, 241, 241);
-  --accent-foreground: #0d0d0d;
-  --destructive: #ff3d00;
-  --destructive-foreground: #eaeaea;
-  --border: #333333;
-  --input: #1a1a1a;
-  --ring: rgba(255, 106, 0, 0.5);
-  --chart-1: #ff6a00;
-  --chart-2: #ff3d00;
-  --chart-3: #eaeaea;
-  --chart-4: #1a1a1a;
-  --chart-5: #0d0d0d;
-  --sidebar: #1a1a1a;
-  --sidebar-foreground: #eaeaea;
-  --sidebar-primary: #ff6a00;
-  --sidebar-primary-foreground: #0d0d0d;
-  --sidebar-accent: #ff3d00;
-  --sidebar-accent-foreground: #eaeaea;
-  --sidebar-border: #ff6a00;
-  --sidebar-ring: rgba(255, 106, 0, 0.5);
+  --radius: 0.75rem;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Brand voice */
+  --color-void: var(--void);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-hairline: var(--hairline);
+
+  /* shadcn compatibility */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -91,300 +64,220 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  html {
+    background-color: var(--void);
+    color-scheme: dark;
+    scroll-behavior: smooth;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--void);
+    color: var(--ink);
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--void);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 106, 0, 0.4);
   }
 }
 
-/* Added custom animations and grid styles */
-@keyframes glow {
-  0%,
-  100% {
-    opacity: 0.5;
+/* ---------------------------------- */
+/* Motion vocabulary — ONE ease       */
+/* ---------------------------------- */
+
+.ease-brand {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
   }
-  50% {
+  55% {
+    transform: translateY(200%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+.animate-scroll-cue {
+  animation: scroll-cue 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* ---------------------------------- */
+/* Display typography                 */
+/* ---------------------------------- */
+
+.text-display {
+  font-family: var(--font-display), ui-sans-serif, sans-serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 1.8rem + 6vw, 8rem);
+  letter-spacing: -0.025em;
+  line-height: 1.03;
+}
+
+.text-display-md {
+  font-family: var(--font-display), ui-sans-serif, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+/* Mono signage labels */
+.text-signage {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+/* ---------------------------------- */
+/* Masked reveal choreography         */
+/* ---------------------------------- */
+
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.08em;
+  margin-block: -0.08em;
+}
+
+.mask-inner {
+  display: block;
+  transform: translateY(112%);
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--stagger, 0ms);
+  will-change: transform;
+}
+
+.fade-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--stagger, 0ms);
+  will-change: opacity, transform;
+}
+
+.is-inview .mask-inner,
+.is-inview.mask-line > .mask-inner {
+  transform: translateY(0%);
+}
+.is-inview .fade-item,
+.is-inview.fade-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------- */
+/* Surfaces                           */
+/* ---------------------------------- */
+
+.hairline {
+  border-color: var(--hairline);
+}
+
+.glass {
+  background-color: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+}
+
+.glow-hover {
+  transition:
+    box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-hover:hover {
+  box-shadow:
+    0 0 20px rgba(255, 106, 0, 0.1),
+    inset 0 0 12px rgba(255, 106, 0, 0.05);
+}
+
+/* Film grain — static material, never animated */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ---------------------------------- */
+/* Reduced motion — everything lands  */
+/* ---------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .mask-inner {
+    transform: translateY(0);
+  }
+
+  .fade-item {
     opacity: 1;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-8px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(-4px) rotate(-1deg);
-  }
-}
-
-@keyframes shine {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes borderGlow {
-  0% {
-    box-shadow: 0 0 5px #ff6a00;
-  }
-  50% {
-    box-shadow: 0 0 20px #ff6a00, 0 0 30px #ff6a00;
-  }
-  100% {
-    box-shadow: 0 0 5px #ff6a00;
-  }
-}
-
-/* Added slow spin animation for navbar lights */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 12s linear infinite;
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.grid-pattern {
-  background-image: linear-gradient(rgba(255, 106, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 106, 0, 0.1) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
-
-.grid-glow {
-  background-image: linear-gradient(rgba(255, 106, 0, 0.8) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 106, 0, 0.8) 1px, transparent 1px);
-  background-size: 50px 50px;
-  transition: all 0.3s ease;
-}
-
-.tech-button {
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.tech-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 106, 0, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.tech-button:hover::before {
-  left: 100%;
-}
-
-.navbar-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.navbar-shine::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 106, 0, 0.3), transparent);
-  animation: shine 3s infinite;
-}
-
-.moving-border {
-  position: relative;
-  background: linear-gradient(45deg, #ff6a00, #ff3d00, #ff6a00, #ff3d00);
-  background-size: 400% 400%;
-  animation: borderGlow 2s ease-in-out infinite;
-}
-
-.moving-border::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  background: #1a1a1a;
-  border-radius: inherit;
-}
-
-.project-card {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.project-card:hover {
-  transform: scale(1.05) translateY(-10px);
-  box-shadow: 0 20px 40px rgba(255, 106, 0, 0.3);
-}
-
-/* BackgroundBeams animation */
-@keyframes backgroundBeams {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.background-beams {
-  background: linear-gradient(
-    45deg,
-    rgba(255, 106, 0, 0.1),
-    rgba(255, 106, 0, 0.1) 10%,
-    transparent 10%,
-    transparent 100%
-  );
-  background-size: 200% 200%;
-  animation: backgroundBeams 10s linear infinite;
-}
-
-.contact-popup {
-  position: relative;
-  border-radius: 1rem;
-  background: #0a0a0a;
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(255, 102, 0, 0.3);
-  animation: popup-scale 0.25s ease-out;
-  /* Better centering for the popup */
-  margin: auto;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Neon spinning border */
-.contact-popup::before {
-  content: "";
-  position: absolute;
-  inset: -60%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    #ff6600 60deg,
-    #ff9900 120deg,
-    #ffaa00 180deg,
-    #ff6600 240deg,
-    #ff9900 300deg,
-    transparent 360deg
-  );
-  animation: spin 6s linear infinite;
-  filter: blur(15px) brightness(1.4);
-  z-index: -2;
-}
-
-.contact-popup::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border-radius: 0.9rem;
-  background: #0a0a0a;
-  z-index: -1;
-}
-
-.navbar-gradient {
-  position: relative;
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.navbar-gradient::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    #ff6600 60deg,
-    #ff9900 120deg,
-    #ffaa00 180deg,
-    #ff6600 240deg,
-    #ff9900 300deg,
-    transparent 360deg
-  );
-  animation: spin 8s linear infinite;
-  filter: blur(8px) brightness(1.2);
-  z-index: -2;
-}
-
-.navbar-gradient::after {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  border-radius: 9999px;
-  /* Fixed background to use proper theme-aware colors instead of CSS variable */
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  z-index: -1;
-}
-
-/* Added dark mode specific styling for navbar gradient */
-.dark .navbar-gradient::after {
-  background: rgba(13, 13, 13, 0.9);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes popup-scale {
-  from {
-    /* Fixed scale animation to work with dialog centering */
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
+    transform: none;
   }
 }

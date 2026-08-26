@@ -45,7 +45,8 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
   }) {
-  const Comp = asChild ? Slot : 'button'
+  // Union of Slot | 'button' breaks ref typing under @types/react 18; widen to ElementType.
+  const Comp = (asChild ? Slot : 'button') as React.ElementType
 
   return (
     <Comp

@@ -1,0 +1,4 @@
+/** Static film-grain material layer. Purely decorative. */
+export default function GrainOverlay() {
+  return <div aria-hidden="true" className="grain-overlay" />
+}
