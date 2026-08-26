@@ -5,30 +5,33 @@ import Eyebrow from "@/components/ui/eyebrow"
 import Reveal from "@/components/ui/reveal"
 
 // Editorial asymmetry: first card wide-left, second narrow-right and offset down.
+// Sizes hints mirror that split so next/image picks the right candidate per column.
 const CARD_LAYOUT = [
   "lg:col-span-7",
   "lg:col-span-5 lg:col-start-8 lg:mt-28",
 ]
+
+const CARD_SIZES = ["(max-width: 1024px) 100vw, 58vw", "(max-width: 1024px) 100vw, 42vw"]
 
 export default function ProjectsSection() {
   return (
     <section id="work" className="relative py-32 md:py-40">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <Reveal variant="mask">
-          <Eyebrow index="02" label="Selected Work" className="mb-8" />
+          <Eyebrow index="02" label="In Production" className="mb-8" />
         </Reveal>
 
         <Reveal variant="mask">
           <h2 className="text-display-md">
             Two systems.
             <br />
-            Zero <span className="text-accent">downtime.</span>
+            Zero <span className="text-accent-text">downtime.</span>
           </h2>
         </Reveal>
 
         <div className="mt-16 grid grid-cols-12 gap-6 md:mt-24 lg:gap-8">
           {PROJECTS.map((project, i) => (
-            <Reveal key={project.title} variant="fade" delayMs={i * 120} className={`col-span-12 ${CARD_LAYOUT[i]}`}>
+            <Reveal key={project.title} variant="fade" delayMs={i * 120} className={`col-span-12 ${CARD_LAYOUT[i] ?? ""}`}>
               <article
                 data-cursor="hover"
                 className="group overflow-hidden rounded-2xl border border-hairline bg-surface transition-colors duration-300 ease-brand hover:border-white/15"
@@ -38,7 +41,7 @@ export default function ProjectsSection() {
                     src={project.image}
                     alt={`${project.title} — project visual`}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 58vw"
+                    sizes={CARD_SIZES[i] ?? "(max-width: 1024px) 100vw"}
                     className="object-cover transition-transform duration-700 ease-brand group-hover:scale-[1.04]"
                   />
                   <div
@@ -62,7 +65,7 @@ export default function ProjectsSection() {
                     </div>
                   </div>
 
-                  <h3 className="font-display text-2xl font-bold tracking-tight transition-colors duration-300 ease-brand group-hover:text-accent md:text-3xl">
+                  <h3 className="font-display text-2xl font-bold tracking-tight transition-colors duration-300 ease-brand group-hover:text-accent-text md:text-3xl">
                     {project.title}
                   </h3>
 
@@ -74,7 +77,7 @@ export default function ProjectsSection() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${project.title} — read the Medium write-up`}
-                      className="text-signage inline-flex items-center gap-2 text-ink underline-offset-8 decoration-white/20 transition-colors duration-200 ease-brand hover:text-accent hover:decoration-accent"
+                      className="text-signage inline-flex items-center gap-2 text-ink underline-offset-8 decoration-white/20 transition-colors duration-200 ease-brand hover:text-accent-text hover:decoration-accent"
                     >
                       <FileText size={15} strokeWidth={1.5} aria-hidden="true" />
                       Write-up
@@ -85,7 +88,7 @@ export default function ProjectsSection() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${project.title} — view source on GitHub`}
-                      className="text-signage inline-flex items-center gap-2 text-ink underline-offset-8 decoration-white/20 transition-colors duration-200 ease-brand hover:text-accent hover:decoration-accent"
+                      className="text-signage inline-flex items-center gap-2 text-ink underline-offset-8 decoration-white/20 transition-colors duration-200 ease-brand hover:text-accent-text hover:decoration-accent"
                     >
                       <Github size={15} strokeWidth={1.5} aria-hidden="true" />
                       Source

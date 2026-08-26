@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react"
-import { HERO } from "@/lib/content"
+import { HERO, SITE } from "@/lib/content"
 import Eyebrow from "@/components/ui/eyebrow"
 import MagneticButton from "@/components/ui/magnetic-button"
 import Reveal from "@/components/ui/reveal"
@@ -17,7 +17,7 @@ export default function HeroSection() {
     <section id="home" className="relative flex min-h-[100svh] items-center">
       <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-32 md:px-8">
         <Reveal variant="mask">
-          <Eyebrow index="00" label="Orbit · Backend & Automations" className="mb-8" />
+          <Eyebrow index="00" label={SITE.role} className="mb-8" />
         </Reveal>
 
         <h1 className="text-display" itemProp="name">
@@ -30,7 +30,7 @@ export default function HeroSection() {
             <span className="mask-line">
               <span className="mask-inner" style={{ "--stagger": "220ms" } as CSSProperties}>
                 {lead}
-                <span className="text-accent">{accent}</span>
+                <span className="text-accent-text">{accent}</span>
               </span>
             </span>
           </Reveal>
@@ -44,7 +44,7 @@ export default function HeroSection() {
           <MagneticButton>
             <a
               href={HERO.ctas[0].href}
-              className="inline-flex items-center rounded-full bg-accent px-7 py-3.5 font-medium text-void transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_24px_rgba(255,106,0,0.25)] active:scale-[0.96]"
+              className="inline-flex items-center rounded-full bg-accent px-7 py-3.5 font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_24px_rgba(255,106,0,0.25)] active:scale-[0.96]"
             >
               {HERO.ctas[0].label}
             </a>

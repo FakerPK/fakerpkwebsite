@@ -6,9 +6,9 @@ export const SITE = {
 }
 
 export const HERO = {
-  headline: "Scripts in orbit.",
-  headlineAccent: "Systems under control.",
-  sub: "Exceptional scripts and backend tech — websocket automation, multi-connection proxy pools, and node management that runs itself.",
+  headline: "Websockets that never drop.",
+  headlineAccent: "Nodes that never sleep.",
+  sub: "Custom Python automation: many concurrent websocket sessions over SOCKS5 proxy pools, dead proxies removed automatically, and node management engineered for 24/7 uptime.",
   ctas: [
     { label: "View My Work", href: "#work" },
     { label: "Get In Touch", href: "#contact" },
@@ -16,15 +16,15 @@ export const HERO = {
 }
 
 export const ABOUT =
-  "I create exceptional scripts and backend tech, pairing newly implemented technologies with reverse-engineered solutions. The specialty is real-time automation: websocket fleets, multi-connection proxy pools, and node management that stays online when nobody is watching. Every build ships with its reasoning — code on GitHub, full write-ups on Medium."
+  "I create custom Python scripts that automate the tedious side of crypto — websocket fleets, multi-connection proxy pools, and node management that stays online when nobody's watching. Robust error handling comes standard: dead proxies get caught and pulled from the file automatically, sessions recover instead of dying quietly. Every build ships with its reasoning — code on GitHub, full write-ups on Medium."
 
 export const SKILLS = [
   { name: "JavaScript", tagline: "Modern ES6+ and TypeScript, tuned for real-time work" },
-  { name: "Python", tagline: "Backend systems and data-driven automation at scale" },
+  { name: "Python", tagline: "Every bot starts here — Python-based scripts built to run unattended" },
   { name: "Node.js", tagline: "Websocket servers, socket clients, event-driven runtimes" },
   { name: "Git", tagline: "Disciplined version control behind every deploy" },
   { name: "Vercel", tagline: "Continuous deployment and edge-ready hosting" },
-  { name: "GitHub", tagline: "Public source of truth for code and write-ups" },
+  { name: "GitHub", tagline: "Public source for every bot — clone the repo, install requirements, run" },
 ]
 
 export type Project = {
@@ -40,7 +40,7 @@ export const PROJECTS: Project[] = [
   {
     title: "GetGrass.io Websocket Automation",
     description:
-      "A Python and JavaScript engine holding many concurrent websocket sessions against the Grass.io network, each routed through its own proxy. Built for uptime: connection rotation, session recovery, and clean telemetry across the whole pool.",
+      "Grass node mining automated on any cheap VPS — multiple devices, User IDs, and IPs held open over SOCKS5 websocket connections for 24/7 uptime. Robust error handling catches dead proxies, SSL WRONG_VERSION_NUMBER errors, and dropped keepalives, then pulls the dead proxies from the file automatically.",
     image: "/grass.png",
     tags: ["Python", "Node.js", "Websockets", "Git"],
     articleUrl:
@@ -50,7 +50,7 @@ export const PROJECTS: Project[] = [
   {
     title: "Bless Network Node Management & Points Mining",
     description:
-      "Python, PHP, and JavaScript driving the Bless network websocket — multiple proxy-backed connections per account with automated node management and points mining. Scales from one account to a full fleet without extra hands.",
+      "Bless Network node management and pings fully automated — no hardware ID needed. Handles multiple devices and websocket connections over proxies, keeps nodes alive, boosts network uptime, and ends manual node registration for good. Built to maximize node earnings around the clock, perfect for cheap VPS setups.",
     image: "/bless.png",
     tags: ["Node.js", "Python", "PHP", "Git", "Websockets"],
     articleUrl:
@@ -60,9 +60,9 @@ export const PROJECTS: Project[] = [
 ]
 
 export const COLLAB = {
-  eyebrow: "03 · TRANSMIT",
+  eyebrow: "03 · CONNECT",
   heading: "Bring me the repetitive, the fragile, the always-on.",
-  sub: "I'll turn it into automation that holds. Code on GitHub, reasoning on Medium — collaborations welcome.",
+  sub: "I'll turn it into automation that holds. Source on GitHub, reasoning on Medium — questions, projects, collaborations: hit me up.",
   socials: [
     { label: "GitHub", href: "https://github.com/FakerPK" },
     { label: "Twitter", href: "https://x.com/fakerpk" },
@@ -71,7 +71,7 @@ export const COLLAB = {
   ],
 }
 
-export const FOOTER = "© 2026 FakerPK™ — Backend and Automations Developer. All systems nominal."
+export const FOOTER = "© 2026 FakerPK™ — Backend and Automations Developer. Still up, running 24/7."
 
 export const EMAILJS = {
   serviceId: "service_bto3h2c",

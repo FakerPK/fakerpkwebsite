@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useState, type FormEvent } from "react"
+import Image from "next/image"
 import emailjs from "@emailjs/browser"
 import { CheckCircle2, Github, Linkedin, Loader2, Send, Twitter } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -36,7 +37,7 @@ export default function CollabSection() {
       formRef.current.reset()
     } catch {
       setStatus("idle")
-      setError("Transmission failed. Try again, or reach me on any channel below.")
+      setError("Message didn't send. Try again, or hit me up on any link below.")
     }
   }
 
@@ -54,7 +55,20 @@ export default function CollabSection() {
   return (
     <section id="contact" className="relative py-32 md:py-44">
       <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
-        <Reveal variant="mask">
+        <Reveal variant="mask" className="flex justify-center">
+          <span className="mask-line w-11">
+            <Image
+              src="/logo-mark.png"
+              alt=""
+              width={44}
+              height={44}
+              aria-hidden="true"
+              className="mask-inner h-11 w-11 object-contain drop-shadow-[0_0_18px_rgba(255,106,0,0.22)]"
+            />
+          </span>
+        </Reveal>
+
+        <Reveal variant="mask" className="mt-10">
           <Eyebrow index={COLLAB.eyebrow.split(" · ")[0]} label={COLLAB.eyebrow.split(" · ")[1]} className="mb-8 justify-center" />
         </Reveal>
 
@@ -70,7 +84,7 @@ export default function CollabSection() {
           <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
               <MagneticButton>
-                <Button className="h-auto rounded-full bg-accent px-9 py-4 text-base font-medium text-void transition-all duration-300 ease-brand hover:bg-accent hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.25)] active:scale-[0.96]">
+                <Button className="h-auto rounded-full bg-accent px-9 py-4 text-base font-medium text-primary-foreground transition-all duration-300 ease-brand hover:bg-accent hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.25)] active:scale-[0.96]">
                   Get In Touch
                 </Button>
               </MagneticButton>
@@ -80,7 +94,7 @@ export default function CollabSection() {
               {status !== "sent" ? (
                 <>
                   <DialogHeader className="space-y-3 text-left">
-                    <DialogTitle className="font-display text-2xl font-bold tracking-tight">Open a channel.</DialogTitle>
+                    <DialogTitle className="font-display text-2xl font-bold tracking-tight">Lay out the problem.</DialogTitle>
                     <DialogDescription className="text-sm text-ink-muted">
                       Tell me what needs automating — expect a reply within 24 hours.
                     </DialogDescription>
@@ -133,7 +147,7 @@ export default function CollabSection() {
                     </div>
 
                     {error && (
-                      <p role="alert" className="text-sm text-red-400">
+                      <p role="alert" className="text-sm text-destructive">
                         {error}
                       </p>
                     )}
@@ -141,7 +155,7 @@ export default function CollabSection() {
                     <Button
                       type="submit"
                       disabled={status === "sending"}
-                      className="w-full rounded-full bg-accent font-medium text-void hover:bg-accent hover:brightness-110"
+                      className="w-full rounded-full bg-accent font-medium text-primary-foreground hover:bg-accent hover:brightness-110"
                     >
                       {status === "sending" ? (
                         <>
@@ -156,7 +170,7 @@ export default function CollabSection() {
                 </>
               ) : (
                 <div className="flex flex-col items-center gap-4 py-10 text-center">
-                  <CheckCircle2 size={48} strokeWidth={1.25} aria-hidden="true" className="text-accent" />
+                  <CheckCircle2 size={48} strokeWidth={1.25} aria-hidden="true" className="text-accent-text" />
                   <h3 className="font-display text-xl font-bold tracking-tight">Received.</h3>
                   <p className="max-w-xs text-sm text-ink-muted">Expect a reply within 24 hours.</p>
                   <div className="mt-2 flex w-full gap-3">
@@ -167,7 +181,7 @@ export default function CollabSection() {
                     >
                       Send Another
                     </Button>
-                    <Button className="flex-1 rounded-full bg-accent text-void hover:bg-accent hover:brightness-110" onClick={() => setOpen(false)}>
+                    <Button className="flex-1 rounded-full bg-accent text-primary-foreground hover:bg-accent hover:brightness-110" onClick={() => setOpen(false)}>
                       Close
                     </Button>
                   </div>
@@ -189,7 +203,7 @@ export default function CollabSection() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${social.label} — opens in a new tab`}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink-muted transition-all duration-300 ease-brand hover:-translate-y-0.5 hover:border-accent/60 hover:text-accent"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink-muted transition-all duration-300 ease-brand hover:-translate-y-0.5 hover:border-accent/60 hover:text-accent-text"
                     >
                       <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
                     </a>

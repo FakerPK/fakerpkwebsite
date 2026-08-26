@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
+/* Tailwind's dark: utilities (shadcn primitives ship them) must key off the
+   site-wide data-theme attribute — NOT prefers-color-scheme — so OS-dark
+   users toggled to light get light form controls and vice versa. Absence of
+   the attribute falls back to the dark-first :root tokens. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* Runtime design tokens — plain CSS vars, consumed by @theme inline below
-   AND directly by base styles/utilities. Dark-only site. */
+   AND directly by base styles/utilities. Dark-first: bare :root IS the dark
+   theme. An inline pre-paint script may stamp data-theme="light" on <html>;
+   absence of data-theme = dark, and every dark value below is unchanged. */
 :root {
   /* Brand voice */
   --void: #0a0908;
@@ -10,6 +18,9 @@
   --ink: #edeae6;
   --ink-muted: rgba(237, 234, 230, 0.62);
   --accent: #ff6a00;
+  /* Text-only derivative: equals --accent in dark (6.93:1), deepens to a
+     4.5:1+ burnt orange in light. Fills/borders/rings keep raw --accent. */
+  --accent-text: var(--accent);
   --accent-soft: rgba(255, 106, 0, 0.12);
   --hairline: rgba(255, 255, 255, 0.08);
 
@@ -34,6 +45,65 @@
   --ring: #ff6a00;
 
   --radius: 0.75rem;
+
+  /* Cross-cutting surface tokens — dark defaults (light overrides below) */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --selection-bg: var(--accent);
+  --selection-ink: var(--void);
+  --cursor-shadow: none;
+  --grain-opacity: 0.06;
+}
+
+/* ==========================================================================
+   LIGHT THEME OVERRIDES — active only when the pre-paint script stamps
+   data-theme="light" on <html>. Bare :root stays dark-first; dark rendering
+   is pixel-identical whether data-theme is absent or "dark".
+   Contrast verified (WCAG): body 15.02:1, muted 5.23:1, muted-on-card 5.42:1,
+   label-on-accent 6.59:1, selection 5.95:1, destructive pair 6.54:1.
+   Accent is #FF6A00 in BOTH themes — never change it.
+   ========================================================================== */
+:root[data-theme="light"] {
+  /* Brand voice — same token names, inverted temperature */
+  --void: #f3f0ea;                      /* page ground: warm paper            */
+  --surface: #fbf9f5;                   /* cards: lifted warm-white sheet     */
+  --raised: #ffffff;                    /* highest lift (popovers)            */
+  --ink: #201b15;                       /* primary text: warm near-black      */
+  --ink-muted: rgba(32, 27, 21, 0.66);  /* 5.23:1 on ground                   */
+  --accent: #ff6a00;                    /* UNCHANGED                          */
+  --accent-text: #b84a00;               /* 4.60:1 paper / 4.97:1 card / 5.23:1 white */
+  --accent-soft: rgba(255, 106, 0, 0.10);
+  --hairline: rgba(32, 27, 21, 0.12);
+
+  /* shadcn compatibility layer */
+  --background: #f3f0ea;
+  --foreground: #201b15;
+  --card: #fbf9f5;
+  --card-foreground: #201b15;
+  --popover: #ffffff;
+  --popover-foreground: #201b15;
+  --primary: #ff6a00;                   /* UNCHANGED                          */
+  --primary-foreground: #14100d;        /* 6.59:1 on orange                   */
+  --secondary: #e9e4da;
+  --secondary-foreground: #201b15;
+  --muted: #e9e4da;
+  --muted-foreground: rgba(32, 27, 21, 0.66);
+  --accent-foreground: #2b1503;         /* deep umber on orange, 6.04:1       */
+  --destructive: #b3261e;               /* was #dc2626 (only 4.25:1 on cream) */
+  --destructive-foreground: #ffffff;    /* 6.54:1                             */
+  --border: rgba(32, 27, 21, 0.14);
+  --input: rgba(32, 27, 21, 0.16);
+  --ring: #ff6a00;
+
+  /* Cross-cutting surface tokens */
+  --glass-bg: rgba(255, 255, 255, 0.55);     /* cards read as frosted paper   */
+  --scrollbar-thumb: rgba(32, 27, 21, 0.22);
+  --selection-bg: var(--accent);
+  --selection-ink: #201b15;
+  --cursor-shadow: drop-shadow(0 1px 6px rgba(20, 16, 13, 0.2));
+  --grain-opacity: 0.05;
+
+  color-scheme: light;
 }
 
 @theme inline {
@@ -48,6 +118,7 @@
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
   --color-accent-soft: var(--accent-soft);
   --color-hairline: var(--hairline);
 
@@ -83,6 +154,10 @@
     scroll-behavior: smooth;
   }
 
+  html[data-theme="light"] {
+    color-scheme: light;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -97,11 +172,17 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
+    /* Theme flips ease between paint properties ONLY — never transform,
+       layout or opacity. Reduced-motion block below flattens this to 0. */
+    transition:
+      background-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   ::selection {
-    background-color: var(--accent);
-    color: var(--void);
+    background-color: var(--selection-bg);
+    color: var(--selection-ink);
   }
 
   :focus-visible {
@@ -110,21 +191,42 @@
     border-radius: 2px;
   }
 
+  /* Raw #FF6A00 outline is 2.52:1 on cream — below WCAG 1.4.11's 3:1 for
+     focus indicators. Keep the orange ring; add a near-black halo whose
+     boundary passes (#FF6A00 vs #201B15 = 5.95:1) so the two-tone ring
+     reads clearly on paper. Dark keeps the bare ring (6.93:1). */
+  [data-theme="light"] :focus-visible {
+    box-shadow: 0 0 0 3px rgba(32, 27, 21, 0.9);
+  }
+
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
   }
   *::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   *::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--scrollbar-thumb);
     border-radius: 999px;
   }
   *::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 106, 0, 0.4);
   }
+}
+
+/* Light theme: Button/Input/Textarea compose their own box-shadow in the
+   utilities layer (shadow-xs + focus-visible:ring-[3px]), and a later layer
+   always beats @layer base regardless of specificity — so the halo above
+   never reaches them and their plain #FF6A00 ring sits at ~2.52:1 on cream.
+   Unlayered author styles outrank every layer: recolor ONLY the ring segment
+   via its variable (--accent-text = #B84A00, >=4.6:1 on paper/card/white).
+   Fills, borders and all other rings keep raw --accent. Dark is untouched. */
+[data-theme="light"] [data-slot="button"]:focus-visible,
+[data-theme="light"] [data-slot="input"]:focus-visible,
+[data-theme="light"] [data-slot="textarea"]:focus-visible {
+  --tw-ring-color: var(--accent-text);
 }
 
 /* ---------------------------------- */
@@ -227,7 +329,7 @@
 }
 
 .glass {
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--glass-bg);
   -webkit-backdrop-filter: blur(14px) saturate(150%);
   backdrop-filter: blur(14px) saturate(150%);
   border: 1px solid var(--hairline);
@@ -252,10 +354,27 @@
   inset: 0;
   z-index: 80;
   pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: soft-light;
+  /* Owns ALL grain styling incl. intensity/blend (with fallbacks) — the
+     component renders a bare hooking div because React's mixBlendMode prop
+     rejects var() strings. */
+  opacity: var(--grain-opacity, 0.06);
+  mix-blend-mode: var(--grain-blend-mode, soft-light);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 160px 160px;
+}
+
+/* ---------------------------------- */
+/* Theme hooks (light)                */
+/* ---------------------------------- */
+
+/* Surface color easing, light theme only — keeps dark-mode scroll behavior
+   (nav glass appearing instantly on scroll) exactly as shipped. Scoped to
+   paint properties, never *. */
+[data-theme="light"] .glass {
+  transition:
+    background-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ---------------------------------- */

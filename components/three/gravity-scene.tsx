@@ -6,6 +6,9 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { Bloom, EffectComposer, Noise, Vignette } from "@react-three/postprocessing"
 import { BlendFunction } from "postprocessing"
 import { SCENE_BOUNDS, getSceneConfig } from "@/lib/three-config"
+import { getTheme, subscribe, type Theme } from "@/lib/theme"
+import { createAccretionDisk } from "./accretion-disk"
+import { createBlackHoleRig } from "./blackhole-rig"
 
 /* Shared runtime state — avoids re-rendering React on high-frequency events */
 const runtime = {
@@ -18,108 +21,79 @@ const runtime = {
 const ACCENT = new THREE.Color("#ff6a00")
 const EMBER = new THREE.Color("#7a2d00")
 const PALE = new THREE.Color("#ffd9b8")
+/* Light-mode targets: warm paper background, ink-toned particles. */
+const DARK_FOG = new THREE.Color("#0a0908")
+const CREAM_FOG = new THREE.Color("#f2ebdd")
+const INK = new THREE.Color("#251c14")
+
+/* Particles crossing this radius are consumed by the horizon and respawned
+ * at the field edge — matches the disk's inner gap (2.2) around the
+ * radius-2 event horizon. */
+const HORIZON_KILL_RADIUS = 2.2
+const KILL_RADIUS_SQ = HORIZON_KILL_RADIUS * HORIZON_KILL_RADIUS
+/* Pointer parallax: a few degrees of tilt on the hole assembly. Parallax,
+ * not control — the pointer never moves the attractor. */
+const TILT_X = 0.07
+const TILT_Y = 0.09
+/* Reduced motion freezes the disk shader at this composed moment. */
+const DISK_STATIC_TIME = 6.5
 
 /* ------------------------------------------------------------------ */
-/* Star core: fresnel-rim shader sphere + additive halo sprite         */
+/* Black hole assembly: rig (horizon + photon ring + lensed halo) and  */
+/* accretion disk, co-axial at the origin, tilted together by the      */
+/* pointer. The old star's pointLight is kept — the debris ring's      */
+/* standard material goes near-black without it.                       */
 /* ------------------------------------------------------------------ */
 
-const CORE_VERTEX = /* glsl */ `
-  varying vec3 vNormal;
-  varying vec3 vView;
-
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-    vView = normalize(-mvPosition.xyz);
-    gl_Position = projectionMatrix * mvPosition;
-  }
-`
-
-const CORE_FRAGMENT = /* glsl */ `
-  uniform vec3 uColor;
-  uniform float uTime;
-  uniform float uIntensity;
-  varying vec3 vNormal;
-  varying vec3 vView;
-
-  void main() {
-    float fresnel = pow(1.0 - clamp(dot(vNormal, vView), 0.0, 1.0), 2.2);
-    float breathe = 0.92 + 0.08 * sin(uTime * 0.8);
-    vec3 body = vec3(0.035, 0.022, 0.014);
-    vec3 col = body + uColor * fresnel * uIntensity * breathe;
-    gl_FragColor = vec4(col, 1.0);
-  }
-`
-
-function createGlowTexture(): THREE.CanvasTexture | null {
-  if (typeof document === "undefined") return null
-  const size = 256
-  const canvas = document.createElement("canvas")
-  canvas.width = size
-  canvas.height = size
-  const ctx = canvas.getContext("2d")
-  if (!ctx) return null
-  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
-  gradient.addColorStop(0, "rgba(255, 140, 60, 0.55)")
-  gradient.addColorStop(0.25, "rgba(255, 106, 0, 0.28)")
-  gradient.addColorStop(0.6, "rgba(255, 106, 0, 0.07)")
-  gradient.addColorStop(1, "rgba(255, 106, 0, 0)")
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, size, size)
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  return texture
-}
-
-function StarCore({ paused }: { paused: boolean }) {
-  const meshRef = useRef<THREE.Mesh>(null)
+function BlackHoleAssembly({ paused }: { paused: boolean }) {
+  const groupRef = useRef<THREE.Group>(null)
   const lightRef = useRef<THREE.PointLight>(null)
 
-  const uniforms = useMemo<{ [k: string]: THREE.IUniform }>(
-    () => ({
-      uTime: { value: 0 },
-      uColor: { value: ACCENT },
-      uIntensity: { value: 1.35 },
-    }),
-    [],
-  )
+  const rig = useMemo(() => createBlackHoleRig(), [])
+  const disk = useMemo(() => createAccretionDisk({ intensity: 1.15 }), [])
 
-  const glowTexture = useMemo(createGlowTexture, [])
+  useEffect(() => () => rig.dispose(), [rig])
+  useEffect(() => () => disk.dispose(), [disk])
 
-  useEffect(() => () => glowTexture?.dispose(), [glowTexture])
+  // Reduced motion: compose one static disk frame, never advance it.
+  useEffect(() => {
+    if (paused) disk.setTime(DISK_STATIC_TIME)
+  }, [paused, disk])
 
   useFrame(({ clock }, delta) => {
     if (paused || runtime.hidden) return
     const d = Math.min(delta, 0.05)
-    uniforms.uTime.value += d
-    if (meshRef.current) meshRef.current.rotation.y += d * 0.06
-    if (lightRef.current) lightRef.current.intensity = 26 + Math.sin(clock.elapsedTime * 0.8) * 2.5
+    disk.update(d)
+
+    // Retained from the old core: gentle breathing on the fill light.
+    if (lightRef.current) {
+      lightRef.current.intensity = 26 + Math.sin(clock.elapsedTime * 0.8) * 2.5
+    }
+
+    // Pointer parallax — eased few-degree tilt of the whole assembly.
+    const group = groupRef.current
+    if (!group) return
+    const tx = runtime.hasPointer ? -runtime.ndc.y * TILT_X : 0
+    const ty = runtime.hasPointer ? runtime.ndc.x * TILT_Y : 0
+    const k = 1 - Math.exp(-2.5 * d)
+    group.rotation.x += (tx - group.rotation.x) * k
+    group.rotation.y += (ty - group.rotation.y) * k
   })
 
   return (
-    <group>
-      <mesh ref={meshRef}>
-        <sphereGeometry args={[1.15, 64, 64]} />
-        <shaderMaterial vertexShader={CORE_VERTEX} fragmentShader={CORE_FRAGMENT} uniforms={uniforms} />
-      </mesh>
-      {glowTexture && (
-        <sprite scale={[6.2, 6.2, 1]}>
-          <spriteMaterial
-            map={glowTexture}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-            transparent
-            opacity={0.5}
-          />
-        </sprite>
-      )}
+    <group ref={groupRef}>
+      <primitive object={rig} />
+      {/* RingGeometry natively lies in XY — same plane the dust circulates in;
+       * identity rotation keeps the shader's Doppler tangent correct. */}
+      <primitive object={disk.mesh} />
       <pointLight ref={lightRef} color="#ff7a1f" intensity={26} distance={40} decay={2} />
     </group>
   )
 }
 
 /* ------------------------------------------------------------------ */
-/* Gravity dust: pointer-attracted particle field                      */
+/* Gravity dust: particle field pulled into the hole, consumed at the  */
+/* horizon, replenished from the field edge                            */
 /* ------------------------------------------------------------------ */
 
 const GRAVITY_G = 65
@@ -127,21 +101,32 @@ const SOFTENING = 22
 const SWIRL = 0.45
 const MAX_SPEED = 9
 
-function DustField({ count, paused }: { count: number; paused: boolean }) {
+function DustField({
+  count,
+  paused,
+  light,
+}: {
+  count: number
+  paused: boolean
+  light: boolean
+}) {
   const pointsRef = useRef<THREE.Points>(null)
+  /* 0 = dark palette, 1 = light palette, eased per frame. */
+  const themeMix = useRef(light ? 1 : 0)
 
   const { positions, velocities, colors } = useMemo(() => {
     const positions = new Float32Array(count * 3)
     const velocities = new Float32Array(count * 3)
     const colors = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
-      // Spiral-galaxy disc facing the camera.
-      const r = Math.sqrt(Math.random()) * 13
+      // Disc facing the camera; floor keeps spawns outside the kill sphere.
+      const r = 2.6 + Math.sqrt(Math.random()) * 10.4
       const theta = Math.random() * Math.PI * 2
       positions[i * 3] = Math.cos(theta) * r
       positions[i * 3 + 1] = Math.sin(theta) * r * 0.96 + gauss() * 0.7
       positions[i * 3 + 2] = gauss() * 1.6
-      // Initial tangential drift -> instant orbital character.
+      // Initial tangential drift -> instant swirl character (CCW, matching
+      // the disk shader's advection direction).
       velocities[i * 3] = -Math.sin(theta) * 0.35
       velocities[i * 3 + 1] = Math.cos(theta) * 0.35
       velocities[i * 3 + 2] = 0
@@ -152,43 +137,73 @@ function DustField({ count, paused }: { count: number; paused: boolean }) {
     return { positions, velocities, colors }
   }, [count])
 
-  const tmp = useMemo(() => new THREE.Vector3(), [])
-  const attractor = useMemo(() => new THREE.Vector3(0, 0, 0), [])
+  // Reduced motion freezes the frame loop below — including the themeMix
+  // easing that lives inside it — so a live theme toggle would strand stale
+  // palette colors on the particles until reload. When paused, snap the mix
+  // and run exactly one recolor pass instead.
+  useEffect(() => {
+    if (!paused) return
+    themeMix.current = light ? 1 : 0
+    const m = themeMix.current
+    const baseR = EMBER.r + (INK.r - EMBER.r) * m
+    const baseG = EMBER.g + (INK.g - EMBER.g) * m
+    const baseB = EMBER.b + (INK.b - EMBER.b) * m
+    for (let i = 0; i < count; i++) {
+      const ix = i * 3
+      const iy = ix + 1
+      const iz = ix + 2
+      // Same speed-based ember -> orange -> pale ramp as the frame loop,
+      // evaluated against the frozen velocities.
+      const speed = Math.sqrt(
+        velocities[ix] * velocities[ix] +
+          velocities[iy] * velocities[iy] +
+          velocities[iz] * velocities[iz],
+      )
+      const hot = Math.min(speed / 3, 1)
+      const white = Math.max(0, Math.min((speed - 3) / 5, 1))
+      colors[ix] = (baseR + (ACCENT.r - baseR) * hot) * (1 - white) + PALE.r * white
+      colors[iy] = (baseG + (ACCENT.g - baseG) * hot) * (1 - white) + PALE.g * white
+      colors[iz] = (baseB + (ACCENT.b - baseB) * hot) * (1 - white) + PALE.b * white
+    }
+    const points = pointsRef.current
+    const colorAttr = points?.geometry.attributes.color as THREE.BufferAttribute | undefined
+    if (colorAttr) colorAttr.needsUpdate = true
+  }, [paused, light, count, velocities, colors])
 
-  useFrame(({ camera }, delta) => {
+  useFrame((_, delta) => {
     if (paused || runtime.hidden) return
     const d = Math.min(delta, 0.05)
     const damp = Math.exp(-0.7 * d)
 
-    // Attractor: pointer projected onto z=0, or a slow autonomous orbit.
-    if (runtime.hasPointer) {
-      tmp.set(runtime.ndc.x, runtime.ndc.y, 0.5).unproject(camera)
-      tmp.sub(camera.position).normalize()
-      if (Math.abs(tmp.z) > 1e-4) {
-        const t = -camera.position.z / tmp.z
-        attractor.copy(camera.position).addScaledVector(tmp, t)
-      }
-    } else {
-      const t = performance.now() * 0.00012
-      attractor.set(Math.cos(t * 1.7) * 3.4, Math.sin(t * 1.1) * 2.6, Math.sin(t * 0.9) * 1.2)
-    }
+    themeMix.current += ((light ? 1 : 0) - themeMix.current) * (1 - Math.exp(-3 * d))
+    const m = themeMix.current
+    // Base particle tone: ember in dark, warm ink on cream paper in light.
+    const baseR = EMBER.r + (INK.r - EMBER.r) * m
+    const baseG = EMBER.g + (INK.g - EMBER.g) * m
+    const baseB = EMBER.b + (INK.b - EMBER.b) * m
 
+    // Attractor pinned to the black hole at the origin — the field feeds it.
     for (let i = 0; i < count; i++) {
       const ix = i * 3
       const iy = ix + 1
       const iz = ix + 2
 
-      const dx = attractor.x - positions[ix]
-      const dy = attractor.y - positions[iy]
-      const dz = attractor.z - positions[iz]
-      const r2 = dx * dx + dy * dy + dz * dz
-      const r = Math.sqrt(r2) + 1e-5
-      const force = GRAVITY_G / (r2 + SOFTENING)
+      const px = positions[ix]
+      const py = positions[iy]
+      const pz = positions[iz]
 
-      // Radial pull + perpendicular swirl -> orbital motion, not collapse.
-      const ax = ((dx / r) + (-dy / r) * SWIRL) * force
-      const ay = ((dy / r) + (dx / r) * SWIRL) * force
-      const az = (dz / r) * force * 0.6
+      const r = Math.sqrt(px * px + py * py + pz * pz) + 1e-5
+      const force = GRAVITY_G / (r * r + SOFTENING)
+
+      // Radial pull + perpendicular swirl -> spiral infall, not collapse.
+      // Swirl uses the CCW tangent (-ny, nx), matching the drift velocities
+      // and the disk shader's advection handedness.
+      const nx = px / r
+      const ny = py / r
+      const nz = pz / r
+      const ax = (nx - ny * SWIRL) * force
+      const ay = (ny + nx * SWIRL) * force
+      const az = nz * force * 0.6
 
       velocities[ix] = (velocities[ix] + ax * d) * damp
       velocities[iy] = (velocities[iy] + ay * d) * damp
@@ -207,6 +222,23 @@ function DustField({ count, paused }: { count: number; paused: boolean }) {
       positions[iy] += velocities[iy] * d
       positions[iz] += velocities[iz] * d
 
+      // Consumed at the horizon: respawn at the outer field edge.
+      if (
+        positions[ix] * positions[ix] +
+          positions[iy] * positions[iy] +
+          positions[iz] * positions[iz] <
+        KILL_RADIUS_SQ
+      ) {
+        const r2 = 12 + Math.random() * 1.8
+        const theta = Math.random() * Math.PI * 2
+        positions[ix] = Math.cos(theta) * r2
+        positions[iy] = Math.sin(theta) * r2 * 0.96
+        positions[iz] = gauss() * 1.6
+        velocities[ix] = -Math.sin(theta) * 0.35
+        velocities[iy] = Math.cos(theta) * 0.35
+        velocities[iz] = 0
+      }
+
       // Soft wrap keeps the field dense without hard edges.
       if (positions[ix] > SCENE_BOUNDS.xy) positions[ix] = -SCENE_BOUNDS.xy
       else if (positions[ix] < -SCENE_BOUNDS.xy) positions[ix] = SCENE_BOUNDS.xy
@@ -215,7 +247,7 @@ function DustField({ count, paused }: { count: number; paused: boolean }) {
       if (positions[iz] > SCENE_BOUNDS.zMax) positions[iz] = SCENE_BOUNDS.zMin
       else if (positions[iz] < SCENE_BOUNDS.zMin) positions[iz] = SCENE_BOUNDS.zMax
 
-      // Speed-based ember -> orange -> pale-white ramp.
+      // Speed-based ember -> orange -> pale-white ramp (ink-based in light).
       const speed = Math.sqrt(
         velocities[ix] * velocities[ix] +
           velocities[iy] * velocities[iy] +
@@ -223,9 +255,9 @@ function DustField({ count, paused }: { count: number; paused: boolean }) {
       )
       const hot = Math.min(speed / 3, 1)
       const white = Math.max(0, Math.min((speed - 3) / 5, 1))
-      colors[ix] = (EMBER.r + (ACCENT.r - EMBER.r) * hot) * (1 - white) + PALE.r * white
-      colors[iy] = (EMBER.g + (ACCENT.g - EMBER.g) * hot) * (1 - white) + PALE.g * white
-      colors[iz] = (EMBER.b + (ACCENT.b - EMBER.b) * hot) * (1 - white) + PALE.b * white
+      colors[ix] = (baseR + (ACCENT.r - baseR) * hot) * (1 - white) + PALE.r * white
+      colors[iy] = (baseG + (ACCENT.g - baseG) * hot) * (1 - white) + PALE.g * white
+      colors[iz] = (baseB + (ACCENT.b - baseB) * hot) * (1 - white) + PALE.b * white
     }
 
     const points = pointsRef.current
@@ -241,13 +273,15 @@ function DustField({ count, paused }: { count: number; paused: boolean }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-color" args={[colors, 3]} />
       </bufferGeometry>
+      {/* Light mode flips to normal blending: ink-dark motes read on cream,
+       * where additive-only glow would wash out. */}
       <pointsMaterial
         size={0.032}
         sizeAttenuation
         vertexColors
         transparent
-        opacity={0.85}
-        blending={THREE.AdditiveBlending}
+        opacity={light ? 0.6 : 0.85}
+        blending={light ? THREE.NormalBlending : THREE.AdditiveBlending}
         depthWrite={false}
       />
     </points>
@@ -264,7 +298,7 @@ function gauss(): number {
 }
 
 /* ------------------------------------------------------------------ */
-/* Debris ring: instanced orbital fragments                            */
+/* Debris ring: instanced drifting fragments                           */
 /* ------------------------------------------------------------------ */
 
 function DebrisRing({ count, paused }: { count: number; paused: boolean }) {
@@ -391,12 +425,38 @@ function CameraRig({ paused }: { paused: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Theme atmosphere: fog eases between warm near-black and cream paper */
+/* ------------------------------------------------------------------ */
+
+function Atmosphere({ light }: { light: boolean }) {
+  const scene = useThree((state) => state.scene)
+  const mix = useRef(light ? 1 : 0)
+
+  useFrame((_, delta) => {
+    const d = Math.min(Math.max(delta, 0), 0.05)
+    const target = light ? 1 : 0
+    mix.current += (target - mix.current) * (1 - Math.exp(-3.2 * d))
+    if (Math.abs(target - mix.current) < 0.0005) mix.current = target
+    const m = mix.current
+
+    const fog = scene.fog
+    if (fog instanceof THREE.FogExp2) {
+      fog.color.copy(DARK_FOG).lerp(CREAM_FOG, m)
+      fog.density = 0.02 + (0.012 - 0.02) * m
+    }
+  })
+
+  return null
+}
+
+/* ------------------------------------------------------------------ */
 /* Scene root                                                          */
 /* ------------------------------------------------------------------ */
 
 export default function GravityScene() {
   const [config, setConfig] = useState(() => getSceneConfig())
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [theme, setThemeState] = useState<Theme>(() => getTheme())
 
   useEffect(() => {
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -430,8 +490,12 @@ export default function GravityScene() {
     }
   }, [])
 
+  // lib/theme.ts pushes the DOM attribute + storage events here.
+  useEffect(() => subscribe(setThemeState), [])
+
   // Reduced motion: one composed static frame, no simulation.
   const paused = reducedMotion
+  const light = theme === "light"
 
   return (
     <div aria-hidden="true" className="fixed inset-0">
@@ -444,13 +508,15 @@ export default function GravityScene() {
           gl.toneMappingExposure = 1.15
         }}
       >
+        {/* Mounted dark; Atmosphere owns color/density so theme swaps ease. */}
         <fogExp2 attach="fog" args={["#0a0908", 0.02]} />
 
         <ambientLight intensity={0.15} />
-        <StarCore paused={paused} />
-        <DustField count={config.particles} paused={paused} />
+        <BlackHoleAssembly paused={paused} />
+        <DustField count={config.particles} paused={paused} light={light} />
         <DebrisRing count={config.debris} paused={paused} />
         {!paused && <CameraRig paused={paused} />}
+        <Atmosphere light={light} />
 
         <EffectComposer multisampling={0}>
           <Bloom mipmapBlur intensity={1.15} luminanceThreshold={0.18} luminanceSmoothing={0.25} />

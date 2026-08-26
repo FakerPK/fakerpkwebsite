@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { INLINE_NO_FLASH_SCRIPT } from "@/lib/theme"
 import "./globals.css"
 
 const inter = Inter({
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://fakerpk.vercel.app"),
   title: "FakerPK™ — Backend & Automations Developer",
   description:
-    "Websocket fleets, multi-connection proxy pools, and node management that stays online. Scripts in orbit — systems under control.",
+    "Websocket fleets, multi-connection proxy pools, and node management that stays online. Built for uptime, monitored end to end.",
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
@@ -65,7 +66,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`dark ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`dark ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INLINE_NO_FLASH_SCRIPT }} />
+      </head>
       <body className="antialiased">{children}</body>
       <Analytics />
     </html>

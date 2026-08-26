@@ -24,12 +24,12 @@ export default function Home() {
     <>
       <a
         href="#home"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-void"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
       >
         Skip to content
       </a>
 
-      {/* WebGL gravity field, fixed behind everything */}
+      {/* Fixed WebGL background layer, behind all content */}
       <SceneLoader />
 
       <GrainOverlay />
