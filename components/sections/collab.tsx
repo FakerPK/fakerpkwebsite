@@ -56,14 +56,14 @@ export default function CollabSection() {
     <section id="contact" className="relative py-32 md:py-44">
       <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
         <Reveal variant="mask" className="flex justify-center">
-          <span className="mask-line w-11">
+          <span className="mask-line w-33">
             <Image
               src="/logo-mark.png"
               alt=""
-              width={44}
-              height={44}
+              width={132}
+              height={132}
               aria-hidden="true"
-              className="mask-inner h-11 w-11 object-contain drop-shadow-[0_0_18px_rgba(255,106,0,0.22)]"
+              className="mask-inner h-33 w-33 object-contain drop-shadow-[0_0_36px_rgba(255,106,0,0.35)]"
             />
           </span>
         </Reveal>

@@ -1,7 +1,7 @@
 import * as THREE from "three"
 
 /**
- * Black hole rig — event horizon, photon ring, lensed halo.
+ * Black hole / white hole rig — event horizon, photon ring, lensed halo.
  *
  * Plain three.js (no drei / no React). Built for the gravity scene in
  * `components/three/gravity-scene.tsx`:
@@ -17,7 +17,7 @@ import * as THREE from "three"
  *     Its renderOrder is pushed high anyway so it deterministically paints
  *     over every other opaque object (star core, instanced debris) inside the
  *     opaque queue instead of relying on distance sorting.
- *   - Both annuli use MeshBasicMaterial with HDR (>1.0) white-orange colors,
+ *   - Both annuli use MeshBasicMaterial with HDR (>1.0) colors,
  *     toneMapped=false and AdditiveBlending — far above the scene's Bloom
  *     luminanceThreshold of 0.18, so the postprocessing mipmap bloom picks
  *     them up hard without touching the Bloom pass itself.
@@ -27,10 +27,18 @@ import * as THREE from "three"
  * invisible. Defaults therefore hug the silhouette (ring ≈ 1.21x horizon);
  * pass explicit `horizonRadius`/`ringRadius`/`haloRadius` if you want the
  * 1.4-1.6 numbers (they need horizonRadius <= ~1.35).
+ *
+ * Light mode inverts to a "white hole": white silhouette, cool blue-white rings,
+ * indigo/violet temperature ramp on the disk.
  */
 
 const ACCENT = new THREE.Color("#ff6a00")
 const PALE = new THREE.Color("#ffd9b8")
+/* Light-mode (white hole) palette: cool stellar tones */
+const ICE = new THREE.Color("#e8f4ff")
+const CYAN = new THREE.Color("#00d4ff")
+const INDIGO = new THREE.Color("#4a00e0")
+const DEEP_VIOLET = new THREE.Color("#1a0033")
 
 export const BLACK_HOLE_DEFAULTS = {
   /** Shadow silhouette radius (world units, scene origin centered). */
@@ -47,8 +55,8 @@ export const BLACK_HOLE_DEFAULTS = {
   /** HDR multipliers — tuned against Bloom luminanceThreshold 0.18. */
   ringBoost: 3.4,
   haloBoost: 1.55,
-  haloOpacity: 0.34,
-} as const
+  haloOpacity: 0.34 as number,
+}
 
 export type BlackHoleRigOptions = {
   /** World-space placement. Default (0, 0, 0) — the old star-core seat. */
@@ -59,6 +67,8 @@ export type BlackHoleRigOptions = {
   ringTube?: number
   haloTube?: number
   haloTiltRadians?: number
+  /** Light mode = white hole (cool stellar palette). Default false (black hole). */
+  light?: boolean
 }
 
 export type BlackHoleRig = THREE.Group & {
@@ -94,30 +104,36 @@ function buildAnnulus(
 export function createBlackHoleRig(options: BlackHoleRigOptions = {}): BlackHoleRig {
   const d = BLACK_HOLE_DEFAULTS
   const horizonRadius = options.horizonRadius ?? d.horizonRadius
+  const isLight = options.light ?? false
 
   const group = new THREE.Group() as BlackHoleRig
-  group.name = "black-hole-rig"
+  group.name = isLight ? "white-hole-rig" : "black-hole-rig"
   if (options.position) group.position.set(...options.position)
 
-  /* -- 1. Event horizon: pure-black depth-writing silhouette --------------- */
+  /* -- 1. Event horizon / white hole silhouette: depth-writing --------------- */
   const horizonGeometry = new THREE.SphereGeometry(horizonRadius, 64, 48)
-  // Slightly oversized vs the physical horizon so the shadow edge stays crisp
-  // under the bloom smear of the surrounding ring.
   const horizonMaterial = new THREE.MeshBasicMaterial({
-    color: 0x000000,
+    color: isLight ? 0xffffff : 0x000000,
     fog: false,
     toneMapped: false,
   })
   const horizon = new THREE.Mesh(horizonGeometry, horizonMaterial)
-  horizon.name = "event-horizon"
+  horizon.name = isLight ? "white-hole-silhouette" : "event-horizon"
   horizon.renderOrder = 100 // wins the opaque queue; see module comment
   group.add(horizon)
 
   /* -- 2. Photon ring: bright filament hugging the silhouette -------------- */
   const ringRadius = options.ringRadius ?? horizonRadius * d.ringRadiusFactor
   const ringTube = options.ringTube ?? Math.max(0.024, horizonRadius * d.ringTubeFactor)
-  // White-hot core leaning orange — HDR so the existing Bloom pass ignites it.
-  const ringColor = PALE.clone().lerp(ACCENT, 0.32).multiplyScalar(d.ringBoost)
+
+  let ringColor: THREE.Color
+  if (isLight) {
+    // White hole: brilliant ice-white core with cyan fringe, HDR for bloom
+    ringColor = ICE.clone().lerp(CYAN, 0.25).multiplyScalar(d.ringBoost * 1.15)
+  } else {
+    // Black hole: white-hot core leaning orange
+    ringColor = PALE.clone().lerp(ACCENT, 0.32).multiplyScalar(d.ringBoost)
+  }
   const photonRing = buildAnnulus("photon-ring", ringRadius, ringTube, ringColor, 1)
   photonRing.renderOrder = 30
   group.add(photonRing)
@@ -126,11 +142,18 @@ export function createBlackHoleRig(options: BlackHoleRigOptions = {}): BlackHole
   const haloRadius = options.haloRadius ?? horizonRadius * d.haloRadiusFactor
   const haloTube = options.haloTube ?? Math.max(0.016, horizonRadius * d.haloTubeFactor)
   const haloTilt = options.haloTiltRadians ?? THREE.MathUtils.degToRad(d.haloTiltDegrees)
-  // Dimmer, thinner, tipped ~80deg out of the disc plane: the far arc passes
-  // behind the horizon and is clipped by its depth, leaving the classic
-  // arcs peeking above/below the shadow.
-  const haloColor = ACCENT.clone().lerp(PALE, 0.25).multiplyScalar(d.haloBoost)
-  const halo = buildAnnulus("lensed-halo", haloRadius, haloTube, haloColor, d.haloOpacity)
+
+  let haloColor: THREE.Color
+  let haloOpacity = d.haloOpacity
+  if (isLight) {
+    // White hole: soft cyan-indigo glow, slightly more visible on light bg
+    haloColor = CYAN.clone().lerp(INDIGO, 0.35).multiplyScalar(d.haloBoost * 1.2)
+    haloOpacity = 0.42
+  } else {
+    // Black hole: dimmer orange-pale glow
+    haloColor = ACCENT.clone().lerp(PALE, 0.25).multiplyScalar(d.haloBoost)
+  }
+  const halo = buildAnnulus("lensed-halo", haloRadius, haloTube, haloColor, haloOpacity)
   halo.rotation.x = haloTilt
   halo.renderOrder = 20
   group.add(halo)

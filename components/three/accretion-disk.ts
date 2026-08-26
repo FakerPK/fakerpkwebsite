@@ -12,6 +12,9 @@
  *
  * Or take only the material via `createAccretionDiskMaterial()` and build the
  * mesh yourself — see DISK_MESH_SETUP in the module tail for exact numbers.
+ *
+ * Light mode inverts to a "white hole" accretion disk: cool stellar palette
+ * (white-hot -> ice -> cyan -> indigo -> deep violet) with matching Doppler beaming.
  */
 
 import * as THREE from "three"
@@ -184,6 +187,8 @@ export interface AccretionDiskOptions {
   flowSpeed?: number
   /** Doppler asymmetry strength (0 disables beaming). Default 1. */
   beamStrength?: number
+  /** Light mode = white hole disk (cool stellar palette). Default false. */
+  light?: boolean
 }
 
 export interface AccretionDiskHandle {

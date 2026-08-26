@@ -348,6 +348,36 @@
     inset 0 0 12px rgba(255, 106, 0, 0.05);
 }
 
+/* Vignette overlay — sits behind all content, above the 3D scene, to boost
+   text contrast without killing the scene. Dark: subtle radial to near-black.
+   Light: warm radial to paper. Both use the shared ease for theme flips. */
+.vignette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      transparent 0%,
+      var(--void) 100%
+    );
+  opacity: 0.28;
+  transition:
+    opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .vignette-overlay {
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      transparent 0%,
+      #e8e2d8 100%
+    );
+  opacity: 0.22;
+}
+
 /* Film grain — static material, never animated */
 .grain-overlay {
   position: fixed;

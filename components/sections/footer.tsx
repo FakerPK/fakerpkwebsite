@@ -28,17 +28,17 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-5 pb-10 pt-14 md:px-8">
         <Reveal variant="fade">
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <Image
                 src="/logo-mark.png"
                 alt=""
                 aria-hidden="true"
                 width={500}
                 height={500}
-                className="h-8 w-8 object-contain opacity-90 drop-shadow-[0_0_12px_rgba(255,106,0,0.2)]"
+                className="h-24 w-24 object-contain opacity-90 drop-shadow-[0_0_24px_rgba(255,106,0,0.3)]"
               />
-              <span aria-hidden="true" className="h-6 w-px bg-hairline" />
-              <span className="fpk-wordmark relative inline-flex h-9">
+              <span aria-hidden="true" className="h-18 w-px bg-hairline" />
+              <span className="fpk-wordmark relative inline-flex h-27">
                 <Image
                   src="/wordmark-ondark.png"
                   alt="FakerPK"

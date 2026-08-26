@@ -23,7 +23,7 @@ const LINKS = [
 const NAV_THEME_CSS = `
 .nav-brand{display:grid}
 .nav-brand>*{grid-area:1/1}
-.nav-brand img{height:2rem;width:auto;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
+.nav-brand img{height:6rem;width:auto;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
 .nav-brand .wordmark-light{opacity:0}
 [data-theme="light"] .nav-brand .wordmark-dark{opacity:0}
 [data-theme="light"] .nav-brand .wordmark-light{opacity:1}

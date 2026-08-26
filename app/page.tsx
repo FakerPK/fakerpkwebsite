@@ -33,6 +33,7 @@ export default function Home() {
       <SceneLoader />
 
       <GrainOverlay />
+      <div className="vignette-overlay" aria-hidden="true" />
       <CustomCursor />
       <SmoothScroll />
       <Nav />
