@@ -26,52 +26,51 @@ export default function Footer() {
       <style>{WORDMARK_THEME_CSS}</style>
 
       <div className="mx-auto max-w-6xl px-5 pb-10 pt-14 md:px-8 relative z-10">
-        {/* Liquid glass backdrop wrapping footer content */}
-        <div className="liquid-glass p-6 md:p-8 -m-6 md:-m-8 rounded-2xl" aria-hidden="true" />
-
-        <Reveal variant="fade">
-          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
-            <div className="flex items-center gap-6">
-              <Image
-                src="/logo-mark.png"
-                alt=""
-                aria-hidden="true"
-                width={500}
-                height={500}
-                className="h-24 w-24 object-contain opacity-90 drop-shadow-[0_0_24px_rgba(255,106,0,0.3)]"
-              />
-              <span aria-hidden="true" className="h-18 w-px bg-hairline" />
-              <span className="fpk-wordmark relative inline-flex h-27">
+        <div className="liquid-glass-wrapper rounded-2xl p-6 md:p-8">
+          <Reveal variant="fade">
+            <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
+              <div className="flex items-center gap-6">
                 <Image
-                  src="/wordmark-ondark.png"
-                  alt="FakerPK"
-                  width={500}
-                  height={149}
-                  className="fpk-wordmark-img fpk-wordmark-dark h-full w-auto"
-                />
-                <Image
-                  src="/wordmark-onlight.png"
+                  src="/logo-mark.png"
                   alt=""
                   aria-hidden="true"
                   width={500}
-                  height={150}
-                  className="fpk-wordmark-img fpk-wordmark-light absolute left-0 top-0 h-full w-auto"
+                  height={500}
+                  className="h-24 w-24 object-contain opacity-90 drop-shadow-[0_0_24px_rgba(255,106,0,0.3)]"
                 />
-              </span>
+                <span aria-hidden="true" className="h-18 w-px bg-hairline" />
+                <span className="fpk-wordmark relative inline-flex h-27">
+                  <Image
+                    src="/wordmark-ondark.png"
+                    alt="FakerPK"
+                    width={500}
+                    height={149}
+                    className="fpk-wordmark-img fpk-wordmark-dark h-full w-auto"
+                  />
+                  <Image
+                    src="/wordmark-onlight.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={500}
+                    height={150}
+                    className="fpk-wordmark-img fpk-wordmark-light absolute left-0 top-0 h-full w-auto"
+                  />
+                </span>
+              </div>
+
+              <a
+                href="#home"
+                aria-label="Back to top"
+                className="group inline-flex items-center gap-2 text-signage text-ink-muted transition-colors duration-200 ease-brand hover:text-accent-text"
+              >
+                Back to top
+                <ArrowUp size={14} strokeWidth={1.5} aria-hidden="true" className="transition-transform duration-300 ease-brand group-hover:-translate-y-0.5" />
+              </a>
             </div>
 
-            <a
-              href="#home"
-              aria-label="Back to top"
-              className="group inline-flex items-center gap-2 text-signage text-ink-muted transition-colors duration-200 ease-brand hover:text-accent-text"
-            >
-              Back to top
-              <ArrowUp size={14} strokeWidth={1.5} aria-hidden="true" className="transition-transform duration-300 ease-brand group-hover:-translate-y-0.5" />
-            </a>
-          </div>
-
-          <p className="text-signage mt-9 text-ink-muted">{FOOTER}</p>
-        </Reveal>
+            <p className="text-signage mt-9 text-ink-muted">{FOOTER}</p>
+          </Reveal>
+        </div>
       </div>
     </footer>
   )

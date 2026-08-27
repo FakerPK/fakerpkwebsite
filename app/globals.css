@@ -491,6 +491,60 @@
     transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Liquid glass wrapper — uses ::before pseudo-element for background
+   so it perfectly wraps dynamic content height without layout issues */
+.liquid-glass-wrapper {
+  position: relative;
+  z-index: 1;
+}
+.liquid-glass-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  z-index: -1;
+  border-radius: 24px;
+  /* Dark mode: subtle warm orange tint */
+  background-color: rgba(255, 106, 0, 0.04);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--hairline);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 24px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+  transition:
+    background-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.liquid-glass-wrapper:hover::before {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 40px rgba(255, 106, 0, 0.08);
+  border-color: rgba(255, 106, 0, 0.15);
+}
+
+/* Light theme liquid glass wrapper */
+[data-theme="light"] .liquid-glass-wrapper::before {
+  background-color: var(--glass-bg);
+  border-color: var(--hairline);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 24px rgba(32, 27, 21, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+[data-theme="light"] .liquid-glass-wrapper:hover::before {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 8px 32px rgba(32, 27, 21, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 0 40px rgba(255, 106, 0, 0.12);
+  border-color: rgba(255, 106, 0, 0.25);
+}
+
 /* ---------------------------------- */
 /* Theme hooks (light)                */
 /* ---------------------------------- */
