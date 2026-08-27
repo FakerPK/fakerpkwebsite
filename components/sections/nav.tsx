@@ -52,16 +52,16 @@ export default function Nav() {
             <Image
               src="/wordmark-ondark.png"
               alt=""
-              width={500}
-              height={149}
+              width={400}
+              height={119}
               priority
               className="wordmark-dark"
             />
             <Image
               src="/wordmark-onlight.png"
               alt=""
-              width={500}
-              height={150}
+              width={400}
+              height={119}
               aria-hidden="true"
               className="wordmark-light"
             />
