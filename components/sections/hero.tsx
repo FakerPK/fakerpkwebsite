@@ -14,12 +14,10 @@ export default function HeroSection() {
 
   return (
     <section id="home" className="relative flex min-h-[100svh] items-center">
-      {/* Liquid glass backdrop behind hero content */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-5xl px-5 md:px-8 -z-10">
-        <div className="rounded-3xl liquid-glass py-16" aria-hidden="true" />
-      </div>
-
       <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-32 md:px-8 relative z-10">
+        {/* Liquid glass backdrop wrapping hero content */}
+        <div className="liquid-glass p-8 md:p-12 -m-8 md:-m-12 rounded-2xl" aria-hidden="true" />
+        
         <Reveal variant="mask">
           <Eyebrow index="00" label={SITE.role} className="mb-8" />
         </Reveal>
@@ -47,7 +45,7 @@ export default function HeroSection() {
         <Reveal variant="fade" delayMs={680} className="mt-12 flex flex-wrap items-center gap-4">
           <a
             href={HERO.ctas[0].href}
-            className="inline-flex items-center rounded-full liquid-glass-pill bg-accent px-8 py-4 font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.3)] active:scale-[0.96]"
+            className="inline-flex items-center rounded-full bg-accent px-8 py-4 font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.3)] active:scale-[0.96]"
           >
             {HERO.ctas[0].label}
           </a>

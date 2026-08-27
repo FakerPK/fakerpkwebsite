@@ -52,9 +52,9 @@ export default function CollabSection() {
 
   return (
     <section id="contact" className="relative py-32 md:py-44">
-      <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
-        {/* Liquid glass backdrop behind the whole section content */}
-        <div className="absolute inset-0 -z-10 mx-auto max-w-2xl rounded-3xl liquid-glass" aria-hidden="true" />
+      <div className="mx-auto max-w-3xl px-5 text-center md:px-8 relative z-10">
+        {/* Liquid glass backdrop wrapping collab content */}
+        <div className="liquid-glass p-8 md:p-12 -m-8 md:-m-12 rounded-2xl" aria-hidden="true" />
 
         <Reveal variant="mask" className="flex justify-center">
           <span className="mask-line w-33">
@@ -84,12 +84,12 @@ export default function CollabSection() {
         <Reveal variant="fade" delayMs={380} className="mt-12">
           <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-              <Button className="h-auto rounded-full liquid-glass-pill bg-accent px-10 py-4 text-base font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.25)] active:scale-[0.96]">
+              <Button className="h-auto rounded-full bg-accent px-10 py-4 text-base font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.25)] active:scale-[0.96]">
                 Get In Touch
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-lg rounded-2xl border-hairline bg-surface p-6 md:p-8 liquid-glass">
+            <DialogContent className="max-w-lg rounded-2xl border-hairline bg-surface p-6 md:p-8 liquid-glass relative overflow-hidden" style={{ background: "rgba(10, 9, 8, 0.92)" }}>
               {status !== "sent" ? (
                 <>
                   <DialogHeader className="space-y-3 text-left">
@@ -154,7 +154,7 @@ export default function CollabSection() {
                     <Button
                       type="submit"
                       disabled={status === "sending"}
-                      className="w-full rounded-full liquid-glass-pill bg-accent font-medium text-primary-foreground hover:brightness-110"
+                      className="w-full rounded-full bg-accent font-medium text-primary-foreground hover:brightness-110"
                     >
                       {status === "sending" ? (
                         <>
@@ -180,7 +180,7 @@ export default function CollabSection() {
                     >
                       Send Another
                     </Button>
-                    <Button className="flex-1 rounded-full liquid-glass-pill bg-accent text-primary-foreground hover:brightness-110" onClick={() => setOpen(false)}>
+                    <Button className="flex-1 rounded-full bg-accent text-primary-foreground hover:brightness-110" onClick={() => setOpen(false)}>
                       Close
                     </Button>
                   </div>

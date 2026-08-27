@@ -399,7 +399,8 @@
 
 /* Base liquid glass surface — deeper blur, subtle chromatic aberration feel */
 .liquid-glass {
-  background-color: var(--glass-bg);
+  /* Dark mode: subtle warm orange tint (--accent at 4% opacity) */
+  background-color: rgba(255, 106, 0, 0.04);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--hairline);
@@ -446,7 +447,8 @@
 
 /* Liquid glass pill for buttons/small elements */
 .liquid-glass-pill {
-  background-color: var(--glass-bg);
+  /* Dark mode: subtle warm orange tint */
+  background-color: rgba(255, 106, 0, 0.04);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid var(--hairline);
@@ -477,28 +479,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 4px 20px rgba(32, 27, 21, 0.12),
     0 0 24px rgba(255, 106, 0, 0.18);
-}
-
-/* Neon border ring — animated gradient orbiting the nav */
-.neon-ring {
-  position: absolute;
-  inset: -2px;
-  z-index: -1;
-  border-radius: inherit;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0%,
-    rgba(255, 106, 0, 0.6) 25%,
-    transparent 50%,
-    rgba(255, 106, 0, 0.6) 75%,
-    transparent 100%
-  );
-  opacity: 0.7;
-  animation: neon-ring-spin 8s linear infinite;
-  filter: blur(1.5px);
-}
-@keyframes neon-ring-spin {
-  to { transform: rotate(360deg); }
 }
 
 /* Section transition liquid glass — morphs on section change */

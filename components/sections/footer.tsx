@@ -25,12 +25,10 @@ export default function Footer() {
     <footer className="relative z-10 border-t border-hairline">
       <style>{WORDMARK_THEME_CSS}</style>
 
-      {/* Liquid glass backdrop behind footer content */}
-      <div className="absolute inset-x-0 bottom-0 mx-auto max-w-5xl px-5 md:px-8 -z-10">
-        <div className="rounded-3xl liquid-glass py-10" aria-hidden="true" />
-      </div>
-
       <div className="mx-auto max-w-6xl px-5 pb-10 pt-14 md:px-8 relative z-10">
+        {/* Liquid glass backdrop wrapping footer content */}
+        <div className="liquid-glass p-6 md:p-8 -m-6 md:-m-8 rounded-2xl" aria-hidden="true" />
+
         <Reveal variant="fade">
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
             <div className="flex items-center gap-6">

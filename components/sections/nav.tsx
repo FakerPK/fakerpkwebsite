@@ -22,7 +22,7 @@ const LINKS = [
 const NAV_THEME_CSS = `
 .nav-brand{display:grid}
 .nav-brand>*{grid-area:1/1}
-.nav-brand img{height:4.8rem;width:auto;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
+.nav-brand img{height:4.32rem;width:auto;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
 .nav-brand .wordmark-light{opacity:0}
 [data-theme="light"] .nav-brand .wordmark-dark{opacity:0}
 [data-theme="light"] .nav-brand .wordmark-light{opacity:1}
@@ -66,17 +66,12 @@ export default function Nav() {
         <div
           className={`
             flex h-14 items-center justify-between rounded-full px-5 transition-all duration-500 ease-brand md:px-6
-            relative overflow-hidden
             ${scrolled ? "liquid-glass nav-glass-transition" : "border border-transparent"}
           `}
           style={{
-            // Subtle morph based on active section
             borderRadius: activeSection === "#home" ? "9999px" : "16px",
           }}
         >
-          {/* Neon ring orbiting the nav */}
-          <div className="neon-ring pointer-events-none" aria-hidden="true" />
-
           <a href="#home" className="nav-brand group" aria-label={`${SITE.name} — back to top`}>
             <Image
               src="/wordmark-ondark.png"
@@ -112,7 +107,7 @@ export default function Nav() {
             <ThemeToggle />
             <a
               href="#contact"
-              className="text-signage inline-flex items-center rounded-full liquid-glass-pill px-5 py-2.5 text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 active:scale-[0.96]"
+              className="text-signage inline-flex items-center rounded-full bg-accent px-5 py-2.5 text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_24px_rgba(255,106,0,0.4)] active:scale-[0.96]"
             >
               Get In Touch
             </a>

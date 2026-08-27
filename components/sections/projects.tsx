@@ -16,12 +16,10 @@ const CARD_SIZES = ["(max-width: 1024px) 100vw, 58vw", "(max-width: 1024px) 100v
 export default function ProjectsSection() {
   return (
     <section id="work" className="relative py-32 md:py-40">
-      {/* Liquid glass backdrop behind projects content */}
-      <div className="absolute inset-x-0 top-0 mx-auto max-w-5xl px-5 md:px-8 -z-10">
-        <div className="rounded-3xl liquid-glass py-24 md:py-32" aria-hidden="true" />
-      </div>
-
       <div className="mx-auto max-w-6xl px-5 md:px-8 relative z-10">
+        {/* Liquid glass backdrop wrapping projects content */}
+        <div className="liquid-glass p-8 md:p-12 -m-8 md:-m-12 rounded-2xl" aria-hidden="true" />
+
         <Reveal variant="mask">
           <Eyebrow index="02" label="In Production" className="mb-8" />
         </Reveal>
