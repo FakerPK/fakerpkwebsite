@@ -16,7 +16,12 @@ const CARD_SIZES = ["(max-width: 1024px) 100vw, 58vw", "(max-width: 1024px) 100v
 export default function ProjectsSection() {
   return (
     <section id="work" className="relative py-32 md:py-40">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+      {/* Liquid glass backdrop behind projects content */}
+      <div className="absolute inset-x-0 top-0 mx-auto max-w-5xl px-5 md:px-8 -z-10">
+        <div className="rounded-3xl liquid-glass py-24 md:py-32" aria-hidden="true" />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 md:px-8 relative z-10">
         <Reveal variant="mask">
           <Eyebrow index="02" label="In Production" className="mb-8" />
         </Reveal>
@@ -34,9 +39,9 @@ export default function ProjectsSection() {
             <Reveal key={project.title} variant="fade" delayMs={i * 120} className={`col-span-12 ${CARD_LAYOUT[i] ?? ""}`}>
               <article
                 data-cursor="hover"
-                className="group overflow-hidden rounded-2xl border border-hairline bg-surface transition-colors duration-300 ease-brand hover:border-white/15"
+                className="group overflow-hidden rounded-2xl liquid-glass transition-all duration-500 ease-brand hover:border-accent/30 hover:shadow-[0_0_40px_rgba(255,106,0,0.12)]"
               >
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div className="relative aspect-[16/10] overflow-hidden rounded-t-2xl">
                   <Image
                     src={project.image}
                     alt={`${project.title} — project visual`}
@@ -57,7 +62,7 @@ export default function ProjectsSection() {
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-full border border-hairline px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ink-muted"
+                          className="rounded-full liquid-glass-pill px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ink-muted"
                         >
                           {tag}
                         </span>

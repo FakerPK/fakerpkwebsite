@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import MagneticButton from "@/components/ui/magnetic-button"
 import ThemeToggle from "@/components/theme-toggle"
 import { SITE } from "@/lib/content"
 
@@ -10,7 +9,7 @@ const LINKS = [
   { label: "Stack", href: "#stack" },
   { label: "Work", href: "#work" },
   { label: "Contact", href: "#contact" },
-]
+] as const
 
 /*
  * Theme-keyed visuals, zero JS: both brand wordmarks render stacked in
@@ -23,7 +22,7 @@ const LINKS = [
 const NAV_THEME_CSS = `
 .nav-brand{display:grid}
 .nav-brand>*{grid-area:1/1}
-.nav-brand img{height:6rem;width:auto;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
+.nav-brand img{height:4.8rem;width:auto;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
 .nav-brand .wordmark-light{opacity:0}
 [data-theme="light"] .nav-brand .wordmark-dark{opacity:0}
 [data-theme="light"] .nav-brand .wordmark-light{opacity:1}
@@ -31,12 +30,33 @@ const NAV_THEME_CSS = `
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState<string>("#home")
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`)
+          }
+        })
+      },
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0.1 }
+    )
+
+    const sections = ["home", "stack", "work", "contact"].map((id) =>
+      document.getElementById(id)
+    )
+    sections.forEach((el) => el && observer.observe(el))
+
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      sections.forEach((el) => el && observer.unobserve(el))
+    }
   }, [])
 
   return (
@@ -44,10 +64,19 @@ export default function Nav() {
       <style>{NAV_THEME_CSS}</style>
       <div className="mx-auto mt-4 max-w-6xl px-5 md:px-8">
         <div
-          className={`flex h-14 items-center justify-between rounded-full px-5 transition-all duration-300 ease-brand md:px-6 ${
-            scrolled ? "glass" : "border border-transparent"
-          }`}
+          className={`
+            flex h-14 items-center justify-between rounded-full px-5 transition-all duration-500 ease-brand md:px-6
+            relative overflow-hidden
+            ${scrolled ? "liquid-glass nav-glass-transition" : "border border-transparent"}
+          `}
+          style={{
+            // Subtle morph based on active section
+            borderRadius: activeSection === "#home" ? "9999px" : "16px",
+          }}
         >
+          {/* Neon ring orbiting the nav */}
+          <div className="neon-ring pointer-events-none" aria-hidden="true" />
+
           <a href="#home" className="nav-brand group" aria-label={`${SITE.name} — back to top`}>
             <Image
               src="/wordmark-ondark.png"
@@ -67,12 +96,12 @@ export default function Nav() {
             />
           </a>
 
-          <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
             {LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-signage text-ink-muted transition-colors duration-200 ease-brand hover:text-ink"
+                className="text-signage text-ink-muted transition-colors duration-200 ease-brand hover:text-ink relative px-2 py-1"
               >
                 {link.label}
               </a>
@@ -81,14 +110,12 @@ export default function Nav() {
 
           <div className="flex items-center gap-2.5">
             <ThemeToggle />
-            <MagneticButton>
-              <a
-                href="#contact"
-                className="text-signage inline-flex items-center rounded-full bg-accent px-4 py-2 text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 active:scale-[0.96]"
-              >
-                Get In Touch
-              </a>
-            </MagneticButton>
+            <a
+              href="#contact"
+              className="text-signage inline-flex items-center rounded-full liquid-glass-pill px-5 py-2.5 text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 active:scale-[0.96]"
+            >
+              Get In Touch
+            </a>
           </div>
         </div>
       </div>

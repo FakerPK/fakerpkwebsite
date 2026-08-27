@@ -5,7 +5,12 @@ import Reveal from "@/components/ui/reveal"
 export default function SkillsSection() {
   return (
     <section id="stack" className="relative py-32 md:py-40">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+      {/* Liquid glass backdrop behind skills content */}
+      <div className="absolute inset-x-0 top-0 mx-auto max-w-5xl px-5 md:px-8 -z-10">
+        <div className="rounded-3xl liquid-glass py-24 md:py-32" aria-hidden="true" />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 md:px-8 relative z-10">
         <Reveal variant="mask">
           <Eyebrow index="01" label="Systems" className="mb-8" />
         </Reveal>

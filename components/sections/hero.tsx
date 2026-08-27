@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react"
 import { HERO, SITE } from "@/lib/content"
 import Eyebrow from "@/components/ui/eyebrow"
-import MagneticButton from "@/components/ui/magnetic-button"
 import Reveal from "@/components/ui/reveal"
 
 function splitAccent(text: string): { lead: string; accent: string } {
@@ -15,7 +14,12 @@ export default function HeroSection() {
 
   return (
     <section id="home" className="relative flex min-h-[100svh] items-center">
-      <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-32 md:px-8">
+      {/* Liquid glass backdrop behind hero content */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-5xl px-5 md:px-8 -z-10">
+        <div className="rounded-3xl liquid-glass py-16" aria-hidden="true" />
+      </div>
+
+      <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-32 md:px-8 relative z-10">
         <Reveal variant="mask">
           <Eyebrow index="00" label={SITE.role} className="mb-8" />
         </Reveal>
@@ -41,22 +45,18 @@ export default function HeroSection() {
         </Reveal>
 
         <Reveal variant="fade" delayMs={680} className="mt-12 flex flex-wrap items-center gap-4">
-          <MagneticButton>
-            <a
-              href={HERO.ctas[0].href}
-              className="inline-flex items-center rounded-full bg-accent px-7 py-3.5 font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_24px_rgba(255,106,0,0.25)] active:scale-[0.96]"
-            >
-              {HERO.ctas[0].label}
-            </a>
-          </MagneticButton>
-          <MagneticButton>
-            <a
-              href={HERO.ctas[1].href}
-              className="text-signage inline-flex items-center rounded-full border border-hairline px-7 py-3.5 text-ink transition-colors duration-300 ease-brand hover:border-white/25 active:scale-[0.96]"
-            >
-              {HERO.ctas[1].label}
-            </a>
-          </MagneticButton>
+          <a
+            href={HERO.ctas[0].href}
+            className="inline-flex items-center rounded-full liquid-glass-pill bg-accent px-8 py-4 font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.3)] active:scale-[0.96]"
+          >
+            {HERO.ctas[0].label}
+          </a>
+          <a
+            href={HERO.ctas[1].href}
+            className="text-signage inline-flex items-center rounded-full liquid-glass-pill border border-hairline px-8 py-4 text-ink transition-colors duration-300 ease-brand hover:border-white/25 active:scale-[0.96]"
+          >
+            {HERO.ctas[1].label}
+          </a>
         </Reveal>
       </div>
 

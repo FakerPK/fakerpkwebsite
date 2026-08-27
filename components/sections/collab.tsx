@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import MagneticButton from "@/components/ui/magnetic-button"
 import Eyebrow from "@/components/ui/eyebrow"
 import Reveal from "@/components/ui/reveal"
 import { COLLAB, EMAILJS } from "@/lib/content"
@@ -44,7 +43,6 @@ export default function CollabSection() {
   const handleOpenChange = (next: boolean) => {
     setOpen(next)
     if (!next) {
-      // Let the close animation finish before resetting state.
       setTimeout(() => {
         setStatus((s) => (s === "sent" ? "idle" : s))
         setError(null)
@@ -55,6 +53,9 @@ export default function CollabSection() {
   return (
     <section id="contact" className="relative py-32 md:py-44">
       <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
+        {/* Liquid glass backdrop behind the whole section content */}
+        <div className="absolute inset-0 -z-10 mx-auto max-w-2xl rounded-3xl liquid-glass" aria-hidden="true" />
+
         <Reveal variant="mask" className="flex justify-center">
           <span className="mask-line w-33">
             <Image
@@ -83,14 +84,12 @@ export default function CollabSection() {
         <Reveal variant="fade" delayMs={380} className="mt-12">
           <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-              <MagneticButton>
-                <Button className="h-auto rounded-full bg-accent px-9 py-4 text-base font-medium text-primary-foreground transition-all duration-300 ease-brand hover:bg-accent hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.25)] active:scale-[0.96]">
-                  Get In Touch
-                </Button>
-              </MagneticButton>
+              <Button className="h-auto rounded-full liquid-glass-pill bg-accent px-10 py-4 text-base font-medium text-primary-foreground transition-all duration-300 ease-brand hover:brightness-110 hover:shadow-[0_0_28px_rgba(255,106,0,0.25)] active:scale-[0.96]">
+                Get In Touch
+              </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-lg rounded-2xl border-hairline bg-surface p-6 md:p-8">
+            <DialogContent className="max-w-lg rounded-2xl border-hairline bg-surface p-6 md:p-8 liquid-glass">
               {status !== "sent" ? (
                 <>
                   <DialogHeader className="space-y-3 text-left">
@@ -155,7 +154,7 @@ export default function CollabSection() {
                     <Button
                       type="submit"
                       disabled={status === "sending"}
-                      className="w-full rounded-full bg-accent font-medium text-primary-foreground hover:bg-accent hover:brightness-110"
+                      className="w-full rounded-full liquid-glass-pill bg-accent font-medium text-primary-foreground hover:brightness-110"
                     >
                       {status === "sending" ? (
                         <>
@@ -176,12 +175,12 @@ export default function CollabSection() {
                   <div className="mt-2 flex w-full gap-3">
                     <Button
                       variant="outline"
-                      className="flex-1 rounded-full border-hairline bg-transparent hover:bg-white/5"
+                      className="flex-1 rounded-full liquid-glass-pill border-hairline bg-transparent hover:bg-white/5"
                       onClick={() => setStatus("idle")}
                     >
                       Send Another
                     </Button>
-                    <Button className="flex-1 rounded-full bg-accent text-primary-foreground hover:bg-accent hover:brightness-110" onClick={() => setOpen(false)}>
+                    <Button className="flex-1 rounded-full liquid-glass-pill bg-accent text-primary-foreground hover:brightness-110" onClick={() => setOpen(false)}>
                       Close
                     </Button>
                   </div>
@@ -192,22 +191,20 @@ export default function CollabSection() {
         </Reveal>
 
         <Reveal variant="fade" delayMs={520}>
-          <ul className="mt-14 flex flex-wrap items-center justify-center gap-4">
+          <ul className="mt-14 flex flex-wrap items-center justify-center gap-5">
             {COLLAB.socials.map((social) => {
               const Icon = SOCIAL_ICONS[social.label as keyof typeof SOCIAL_ICONS]
               return (
                 <li key={social.label}>
-                  <MagneticButton>
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${social.label} — opens in a new tab`}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink-muted transition-all duration-300 ease-brand hover:-translate-y-0.5 hover:border-accent/60 hover:text-accent-text"
-                    >
-                      <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
-                    </a>
-                  </MagneticButton>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${social.label} — opens in a new tab`}
+                    className="flex h-14 w-14 items-center justify-center rounded-full liquid-glass-pill text-ink-muted transition-all duration-300 ease-brand hover:-translate-y-1 hover:border-accent/60 hover:text-accent-text hover:shadow-[0_0_24px_rgba(255,106,0,0.25)]"
+                  >
+                    <Icon size={20} strokeWidth={1.5} aria-hidden="true" />
+                  </a>
                 </li>
               )
             })}
