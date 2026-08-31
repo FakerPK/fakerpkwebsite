@@ -87,7 +87,7 @@ export default function CollabSection() {
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="max-w-lg rounded-2xl border-hairline bg-surface p-6 md:p-8 liquid-glass relative overflow-hidden" style={{ background: "rgba(10, 9, 8, 0.92)" }}>
+              <DialogContent className="max-w-lg rounded-2xl border-hairline bg-surface p-6 md:p-8 liquid-glass">
                 {status !== "sent" ? (
                   <>
                     <DialogHeader className="space-y-3 text-left">
