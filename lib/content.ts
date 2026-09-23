@@ -1,13 +1,13 @@
 export const SITE = {
   name: "FakerPK",
-  brand: "FAKER PK™",
-  role: "Backend & Automations Developer",
+  brand: "FAKERPK™",
+  role: "Backend & Automations Developer, Unreal Engine Fortnite Creator",
   url: "https://fakerpk.vercel.app",
 }
 
 export const HERO = {
-  headline: "Websockets that never drop.",
-  headlineAccent: "Nodes that never sleep.",
+  headline: "Systems that never sleep.",
+  headlineAccent: "Code that makes them move.",
   sub: "Custom Python automation: many concurrent websocket sessions over SOCKS5 proxy pools, dead proxies removed automatically, and node management engineered for 24/7 uptime.",
   ctas: [
     { label: "View My Work", href: "#work" },
@@ -56,6 +56,16 @@ export const PROJECTS: Project[] = [
     articleUrl:
       "https://medium.com/@FakerPK/bless-network-bot-v1-0-automate-node-management-and-mining-6f017d47bb44",
     githubUrl: "https://github.com/FakerPK/BlessNetworkBot",
+  },
+  {
+    title: "DePINed Network Multi Threaded API Pinging & Uptime Management",
+    description:
+      "Automate your connection to the DePINed API with this Python and Javascript based script. This script manages multiple tokens and ensures 24/7 uptime for your connections.",
+    image: "/depined.png",
+    tags: ["Node.js", "Python", "Javascript", "Git", "Websockets"],
+    articleUrl:
+      "https://medium.com/@FakerPK/farm-the-depined-airdrop-with-my-depined-network-automated-farming-bot-for-100-uptime-0ab41c5a36b8",
+    githubUrl: "https://github.com/FakerPK/depinedbot",
   },
 ]
 
